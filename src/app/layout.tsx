@@ -23,7 +23,6 @@ export default async function RootLayout({
   return (
     <html lang="tr">
       <body>
-        {!isAdmin && <CustomCursor />}
         {!isAdmin && <Navbar />}
         <main>
           {isAdmin ? children : <PageTransition>{children}</PageTransition>}
@@ -32,4 +31,5 @@ export default async function RootLayout({
     </html>
   );
 }
+
 
