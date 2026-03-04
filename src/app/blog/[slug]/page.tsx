@@ -3,12 +3,33 @@ import { Post } from "@/models/Post";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import Image from "next/image";
 import styles from "./slug.module.css";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    await connectDB();
+    const post = await Post.findOne({ slug }).lean();
+
+    if (!post) return { title: "Yazı Bulunamadı" };
+
+    return {
+        title: `${post.title} | Furkan Keleş Blog`,
+        description: post.summary,
+        openGraph: {
+            title: post.title,
+            description: post.summary,
+            images: post.imageUrl ? [post.imageUrl] : [],
+        }
+    };
+}
+
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+
     const { slug } = await params;
 
     let post: any = null;
@@ -23,26 +44,49 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         return notFound();
     }
 
+    // Okuma süresi hesapla (ortalama 200 kelime/dk)
+    const wordCount = post.content.split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200);
+
     return (
         <article className={`container ${styles.articleContainer}`}>
             <Link href="/blog" className={styles.backLink}>
                 <ArrowLeft size={16} /> Blog&apos;a Dön
             </Link>
 
+            {post.imageUrl && (
+                <div className={styles.heroImageWrapper} style={{ position: 'relative', width: '100%', height: '400px', marginBottom: '2rem', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+                    <Image
+                        src={post.imageUrl}
+                        alt={post.title}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        priority
+                    />
+                </div>
+            )}
+
             <header className={styles.header}>
                 <div className={styles.meta}>
-                    <Calendar size={16} />
-                    <time dateTime={(post.date as Date)?.toString()}>
-                        {new Date(post.date).toLocaleDateString("tr-TR", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                    </time>
+                    <div className={styles.metaItem}>
+                        <Calendar size={14} />
+                        <time dateTime={(post.date as Date)?.toString()}>
+                            {new Date(post.date).toLocaleDateString("tr-TR", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            })}
+                        </time>
+                    </div>
+                    <div className={styles.metaItem}>
+                        <Clock size={14} />
+                        <span>{readingTime} dk okuma</span>
+                    </div>
                 </div>
                 <h1 className={styles.title}>{post.title}</h1>
                 {post.summary && <p className={styles.summary}>{post.summary}</p>}
             </header>
+
 
             <div className={styles.mdxContent}>
                 {/* @ts-ignore */}

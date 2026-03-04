@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { title, slug, summary, content, technologies, githubUrl, liveUrl, date } = body;
+        const { title, slug, summary, content, technologies, githubUrl, liveUrl, date, imageUrl } = body;
+
 
         if (!title || !slug || !summary || !content) {
             return NextResponse.json({ error: "Zorunlu alanlar eksik" }, { status: 400 });
@@ -41,8 +42,10 @@ export async function POST(req: NextRequest) {
             technologies: technologies || [],
             githubUrl: githubUrl || "",
             liveUrl: liveUrl || "",
+            imageUrl: imageUrl || "",
             date: date || new Date(),
         });
+
         return NextResponse.json(newProject, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: "Proje oluşturulurken hata oluştu" }, { status: 500 });

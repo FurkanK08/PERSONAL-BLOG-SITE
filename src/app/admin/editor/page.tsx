@@ -24,6 +24,7 @@ function EditorContent() {
         technologies: "",
         githubUrl: "",
         liveUrl: "",
+        imageUrl: "",
         date: new Date().toISOString().split("T")[0],
     });
 
@@ -44,6 +45,7 @@ function EditorContent() {
                             technologies: (data.technologies || []).join(", "),
                             githubUrl: data.githubUrl || "",
                             liveUrl: data.liveUrl || "",
+                            imageUrl: data.imageUrl || "",
                             date: data.date ? data.date.split("T")[0] : new Date().toISOString().split("T")[0],
                         });
                     }
@@ -68,6 +70,29 @@ function EditorContent() {
         }
     }
 
+    async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("/api/upload", { method: "POST", body: formData });
+            const data = await res.json();
+            if (data.url) {
+                setForm((p) => ({ ...p, imageUrl: data.url }));
+            } else {
+                setError("Yükleme başarısız oldu.");
+            }
+        } catch {
+            setError("Görsel yüklenirken bir hata oluştu.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
@@ -81,10 +106,10 @@ function EditorContent() {
         const method = isEdit ? "PUT" : "POST";
 
         const body = type === "post"
-            ? { title: form.title, slug: form.slug, summary: form.summary, content: form.content, date: form.date }
+            ? { title: form.title, slug: form.slug, summary: form.summary, content: form.content, date: form.date, imageUrl: form.imageUrl }
             : {
                 title: form.title, slug: form.slug, summary: form.summary,
-                content: form.content, date: form.date,
+                content: form.content, date: form.date, imageUrl: form.imageUrl,
                 technologies: form.technologies.split(",").map((t) => t.trim()).filter(Boolean),
                 githubUrl: form.githubUrl, liveUrl: form.liveUrl,
             };
@@ -135,6 +160,21 @@ function EditorContent() {
                         <label className={styles.label}>Özet *</label>
                         <input name="summary" value={form.summary} onChange={handleChange} className={styles.input} placeholder="Kısa bir özet..." required />
                     </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Kapak Görseli URL</label>
+                        <div className={styles.uploadRow}>
+                            <input name="imageUrl" value={form.imageUrl} onChange={handleChange} className={styles.input} placeholder="https://cloudinary.com/..." />
+                            <label className={styles.uploadBtn}>
+                                {loading ? "..." : "Yükle"}
+                                <input type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
+                            </label>
+                        </div>
+                        {form.imageUrl && (
+                            <img src={form.imageUrl} alt="Önizleme" className={styles.preview} />
+                        )}
+                    </div>
+
 
                     {isProject && (
                         <div className={styles.grid}>

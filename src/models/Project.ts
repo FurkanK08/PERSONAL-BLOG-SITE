@@ -8,8 +8,10 @@ export interface IProject extends Document {
     date: Date;
     githubUrl?: string; // Optional
     liveUrl?: string; // Optional
+    imageUrl?: string; // Optional cover image
     technologies: string[];
 }
+
 
 const ProjectSchema: Schema = new Schema(
     {
@@ -20,7 +22,9 @@ const ProjectSchema: Schema = new Schema(
         date: { type: Date, default: Date.now },
         githubUrl: { type: String, required: false },
         liveUrl: { type: String, required: false },
+        imageUrl: { type: String, required: false },
         technologies: { type: [String], default: [] },
+
     },
     { timestamps: true }
 );

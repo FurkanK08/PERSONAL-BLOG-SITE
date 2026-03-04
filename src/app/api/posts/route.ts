@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { title, slug, summary, content, date } = body;
+        const { title, slug, summary, content, date, imageUrl } = body;
+
 
         if (!title || !slug || !summary || !content) {
             return NextResponse.json({ error: "Tüm alanlar zorunludur" }, { status: 400 });
@@ -36,7 +37,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Bu slug zaten kullanılmakta" }, { status: 409 });
         }
 
-        const newPost = await Post.create({ title, slug, summary, content, date: date || new Date() });
+        const newPost = await Post.create({ title, slug, summary, content, date: date || new Date(), imageUrl });
+
         return NextResponse.json(newPost, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: "Yazı oluşturulurken hata oluştu" }, { status: 500 });

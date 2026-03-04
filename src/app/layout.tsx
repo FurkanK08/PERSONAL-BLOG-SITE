@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: "Yazılım Geliştiricisi Portföy ve Blog Sayfası",
 };
 
+import CustomCursor from "@/components/ui/CustomCursor";
+import PageTransition from "@/components/layout/PageTransition";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -20,9 +23,13 @@ export default async function RootLayout({
   return (
     <html lang="tr">
       <body>
+        {!isAdmin && <CustomCursor />}
         {!isAdmin && <Navbar />}
-        <main>{children}</main>
+        <main>
+          {isAdmin ? children : <PageTransition>{children}</PageTransition>}
+        </main>
       </body>
     </html>
   );
 }
+

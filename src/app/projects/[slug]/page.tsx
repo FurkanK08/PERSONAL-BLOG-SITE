@@ -5,10 +5,31 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import styles from "../../blog/[slug]/slug.module.css";
+import Image from "next/image";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    await connectDB();
+    const project = await Project.findOne({ slug }).lean();
+
+    if (!project) return { title: "Proje Bulunamadı" };
+
+    return {
+        title: `${project.title} | Furkan Keleş Projeleri`,
+        description: project.summary,
+        openGraph: {
+            title: project.title,
+            description: project.summary,
+            images: project.imageUrl ? [project.imageUrl] : [],
+        }
+    };
+}
+
 export default async function ProjectPost({ params }: { params: Promise<{ slug: string }> }) {
+
     const { slug } = await params;
 
     let project: any = null;
@@ -29,7 +50,20 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                 <ArrowLeft size={16} /> Projelere Dön
             </Link>
 
+            {project.imageUrl && (
+                <div className={styles.heroImageWrapper} style={{ position: 'relative', width: '100%', height: '400px', marginBottom: '2rem', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+                    <Image
+                        src={project.imageUrl}
+                        alt={project.title}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        priority
+                    />
+                </div>
+            )}
+
             <header className={styles.header}>
+
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
                     <div>
                         <h1 className={styles.title}>{project.title}</h1>
