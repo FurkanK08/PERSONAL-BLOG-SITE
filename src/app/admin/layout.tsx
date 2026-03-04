@@ -1,16 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import styles from "./layout.module.css";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
+    const pathname = usePathname();
+    const isLoginPage = pathname === "/admin/login";
 
     async function handleLogout() {
         await fetch("/api/auth/logout", { method: "POST" });
         router.push("/admin/login");
         router.refresh();
+    }
+
+    // Login sayfasında sidebar yoktur — sadece içerik gösterilir
+    if (isLoginPage) {
+        return <>{children}</>;
     }
 
     return (
