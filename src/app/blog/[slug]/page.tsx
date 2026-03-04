@@ -1,21 +1,23 @@
-import { getPostBySlug, getPosts } from "@/lib/mdx";
+import connectDB from "@/lib/mongoose";
+import { Post } from "@/models/Post";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { ArrowLeft, Calendar } from "lucide-react";
 import styles from "./slug.module.css";
 
-// Build zamanında oluşturulacak sayfaların yollarını Next.js'e bildiririz (SSG)
-export async function generateStaticParams() {
-    const posts = getPosts("blog");
-    return posts.map((post) => ({
-        slug: post.slug,
-    }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const post = getPostBySlug("blog", slug);
+
+    let post: any = null;
+    try {
+        await connectDB();
+        post = await Post.findOne({ slug }).lean();
+    } catch (e) {
+        return notFound();
+    }
 
     if (!post) {
         return notFound();
@@ -24,13 +26,13 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     return (
         <article className={`container ${styles.articleContainer}`}>
             <Link href="/blog" className={styles.backLink}>
-                <ArrowLeft size={16} /> Blog'a Dön
+                <ArrowLeft size={16} /> Blog&apos;a Dön
             </Link>
 
             <header className={styles.header}>
                 <div className={styles.meta}>
                     <Calendar size={16} />
-                    <time dateTime={post.date}>
+                    <time dateTime={(post.date as Date)?.toString()}>
                         {new Date(post.date).toLocaleDateString("tr-TR", {
                             year: "numeric",
                             month: "long",

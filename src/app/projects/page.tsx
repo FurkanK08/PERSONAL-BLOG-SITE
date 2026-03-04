@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getPosts } from "@/lib/mdx";
+import connectDB from "@/lib/mongoose";
+import { Project } from "@/models/Project";
 import styles from "../blog/page.module.css";
 import { ArrowRight, Github, ExternalLink } from "lucide-react";
 
@@ -8,8 +9,16 @@ export const metadata = {
     description: "Geliştirdiğim projeler ve yetkinliklerim.",
 };
 
-export default function ProjectsPage() {
-    const projects = getPosts("projects");
+export const dynamic = "force-dynamic";
+
+export default async function ProjectsPage() {
+    let projects: any[] = [];
+    try {
+        await connectDB();
+        projects = await Project.find({}).sort({ date: -1 }).lean() as any[];
+    } catch (e) {
+        projects = [];
+    }
 
     return (
         <div className={`container ${styles.pageContainer}`}>
@@ -25,13 +34,12 @@ export default function ProjectsPage() {
                 {projects.map((project) => (
                     <article key={project.slug} className={styles.card}>
                         <div className={styles.cardContent}>
-
                             <h2 className={styles.cardTitle}>{project.title}</h2>
                             <p className={styles.cardSummary}>{project.summary}</p>
 
-                            {project.tags && (
+                            {project.technologies && project.technologies.length > 0 && (
                                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-                                    {project.tags.map(tag => (
+                                    {project.technologies.map((tag: string) => (
                                         <span key={tag} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', background: 'var(--surface-hover)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-teal)' }}>
                                             {tag}
                                         </span>
@@ -40,8 +48,13 @@ export default function ProjectsPage() {
                             )}
 
                             <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
-                                {project.link && (
-                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className={styles.readMore} style={{ color: 'var(--text-primary)' }}>
+                                {project.githubUrl && (
+                                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className={styles.readMore} style={{ color: 'var(--text-primary)' }}>
+                                        <Github size={16} /> GitHub
+                                    </a>
+                                )}
+                                {project.liveUrl && (
+                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className={styles.readMore} style={{ color: 'var(--text-primary)' }}>
                                         <ExternalLink size={16} /> Ziyaret Et
                                     </a>
                                 )}

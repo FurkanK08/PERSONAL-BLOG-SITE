@@ -1,0 +1,210 @@
+.page {
+    max-width: 960px;
+    color: #e2e8f0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.heading {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 0.25rem;
+}
+
+.sub {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.newBtns {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.addBtn,
+.addBtnProject {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.addBtn {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+}
+
+.addBtnProject {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: white;
+}
+
+.addBtn:hover,
+.addBtnProject:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.statsRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.statCard {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 1rem;
+}
+
+.statIcon {
+    font-size: 2rem;
+}
+
+.statNum {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #06b6d4;
+    margin: 0;
+}
+
+.statLabel {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.35rem;
+    border-radius: 0.75rem;
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tab {
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.activeTab {
+    background: rgba(6, 182, 212, 0.15);
+    color: #06b6d4;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #475569;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.row:hover {
+    border-color: rgba(6, 182, 212, 0.2);
+}
+
+.rowTitle {
+    font-weight: 600;
+    color: #e2e8f0;
+    margin: 0 0 0.25rem;
+}
+
+.rowMeta {
+    font-size: 0.8rem;
+    color: #475569;
+    font-family: monospace;
+    margin: 0;
+}
+
+.rowActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.editBtn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(6, 182, 212, 0.1);
+    color: #06b6d4;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.editBtn:hover {
+    background: rgba(6, 182, 212, 0.2);
+}
+
+.deleteBtn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(239, 68, 68, 0.08);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.deleteBtn:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.empty {
+    text-align: center;
+    padding: 3rem;
+    color: #475569;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}

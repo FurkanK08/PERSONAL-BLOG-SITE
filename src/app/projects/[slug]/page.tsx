@@ -1,21 +1,23 @@
-import { getPostBySlug, getPosts } from "@/lib/mdx";
+import connectDB from "@/lib/mongoose";
+import { Project } from "@/models/Project";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import styles from "../../blog/[slug]/slug.module.css";
 
-// Build zamanında sayfa rotalarını (SSG) belirle
-export async function generateStaticParams() {
-    const projects = getPosts("projects");
-    return projects.map((project) => ({
-        slug: project.slug,
-    }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function ProjectPost({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const project = getPostBySlug("projects", slug);
+
+    let project: any = null;
+    try {
+        await connectDB();
+        project = await Project.findOne({ slug }).lean();
+    } catch (e) {
+        return notFound();
+    }
 
     if (!project) {
         return notFound();
@@ -32,9 +34,9 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                     <div>
                         <h1 className={styles.title}>{project.title}</h1>
 
-                        {project.tags && (
+                        {project.technologies && project.technologies.length > 0 && (
                             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem', marginTop: "0.5rem" }}>
-                                {project.tags.map(tag => (
+                                {project.technologies.map((tag: string) => (
                                     <span key={tag} style={{ fontSize: '0.875rem', padding: '0.25rem 0.75rem', background: 'var(--surface-color)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-full)', color: 'var(--text-secondary)' }}>
                                         {tag}
                                     </span>
@@ -43,20 +45,20 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                         )}
                     </div>
 
-                    {project.link && (
-                        <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                                backgroundColor: "var(--accent-teal)", color: "#000",
-                                padding: "0.75rem 1.25rem", borderRadius: "var(--radius-md)", fontWeight: 600
-                            }}
-                        >
-                            <ExternalLink size={18} /> Projeyi Ziyaret Et
-                        </a>
-                    )}
+                    <div style={{ display: "flex", gap: "0.75rem" }}>
+                        {project.githubUrl && (
+                            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
+                                style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "var(--surface-color)", border: "1px solid var(--border-color)", color: "var(--text-primary)", padding: "0.65rem 1.1rem", borderRadius: "var(--radius-md)", fontWeight: 600, textDecoration: "none" }}>
+                                <Github size={16} /> GitHub
+                            </a>
+                        )}
+                        {project.liveUrl && (
+                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
+                                style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", backgroundColor: "var(--accent-teal)", color: "#000", padding: "0.65rem 1.1rem", borderRadius: "var(--radius-md)", fontWeight: 600, textDecoration: "none" }}>
+                                <ExternalLink size={16} /> Projeyi Ziyaret Et
+                            </a>
+                        )}
+                    </div>
                 </div>
 
                 {project.summary && <p className={styles.summary} style={{ marginTop: "1.5rem" }}>{project.summary}</p>}

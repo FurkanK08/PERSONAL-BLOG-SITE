@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getPosts } from "@/lib/mdx";
+import connectDB from "@/lib/mongoose";
+import { Post } from "@/models/Post";
 import styles from "./page.module.css";
 import { ArrowRight, Calendar } from "lucide-react";
 
@@ -8,8 +9,16 @@ export const metadata = {
     description: "Yazılım geliştirme, teknoloji ve kariyer üzerine yazılarım.",
 };
 
-export default function BlogPage() {
-    const posts = getPosts("blog");
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+    let posts: any[] = [];
+    try {
+        await connectDB();
+        posts = await Post.find({}).sort({ date: -1 }).lean() as any[];
+    } catch (e) {
+        posts = [];
+    }
 
     return (
         <div className={`container ${styles.pageContainer}`}>
@@ -28,7 +37,7 @@ export default function BlogPage() {
                             <div className={styles.cardContent}>
                                 <div className={styles.meta}>
                                     <Calendar size={14} />
-                                    <time dateTime={post.date}>
+                                    <time dateTime={post.date?.toString()}>
                                         {new Date(post.date).toLocaleDateString("tr-TR", {
                                             year: "numeric",
                                             month: "long",
