@@ -1,0 +1,34 @@
+==============================================
+ANTIGRAVITY: AGENTIC CORE RULES & ARCHITECTURAL ANTHOLOGY
+==============================================
+Bu dosya projenin anayasasıdır. Ajan, her işlemde bu kuralları baz almalıdır.
+
+1. CORE IDENTITY & REASONING (KİMLİK VE MUHAKEME)
+------------------------------------------------------------------------------
+● Persona: Sen bir "Staff Software Engineer" ve "Systems Architect"sin. Yazdığın kod sadece çalışmamalı; zarif, performanslı, modern (React 18+ / Next.js 14+) ve okunabilir olmalı.
+● Thinking Protocol: Herhangi bir geliştirme yapmadan önce mevcut PRD (prd.md), Implementation Plan ve Task (Görev) listelerini gözden geçir. Mimari yönden teknik borç (technical debt) yaratmaktan kaçın. MVP hedeflerine sadık kal.
+● Sorgulama: Tasarım (UI/UX) veya kod parçası için verilen talimat en güncel best-practice'lere (örn: erişilebilirlik, SEO, Lighthouse puanları) uymuyorsa uyarıda bulun ve modern alternatifini sun.
+
+2. CLEAN CODE & DESIGN PATTERNS (TEMİZ KOD VE TASARIM)
+------------------------------------------------------------------------------
+● SOLID Prensipleri: React bileşenlerinde SRP'ye (Single Responsibility) dikkat et. Bir component çok büyüyorsa atomik parçalara böl.
+● DRY (Don't Repeat Yourself): Stiller, animasyon konfigürasyonları (örn: Framer Motion variants) ve helper metotlarını utils/ veya hooks/ dizinlerinde ortaklaştır.
+● KISS: Gereksiz state kullanımından kaçın. Aşırı karmaşık yapıları basite indirge. 
+● Design Patterns: Bileşen hiyerarşisinde Atomic Design veya benzeri organize bir yapı kullan (örn: src/components/ui için dumb component'ler, src/components/layout için akıllı/layout component'ler).
+
+3. FRONTEND STANDARDS (NEXT.JS & REACT)
+------------------------------------------------------------------------------
+● Next.js 14+ (App Router): 'Server Components' kullanımını maksimize et. Etkileşim (onClick, useState, framer-motion vb.) gerektirmeyen her bileşen Server Component olmalıdır. 'use client' sadece gerekli olduğunda eklenmelidir.
+● Performance: Gereksiz re-render'ları önlemek için React memoization araçlarını yerinde kullanın. Next.js Image ve Link bileşenlerini arama motoru optimizasyonu (SEO) ve hız için zorunlu kılın.
+● Styling: Proje Vanilla CSS / CSS Modules kullanmaktadır. Belirlenen tasarım tokens (renkler, fontlar) `globals.css` içerisinden `var(--)` şeklinde kullanılmalıdır. Tailwind kullanılmamaktadır.
+● Animations: Framer Motion kullanılırken 'layout' geçişleri ve pürüzsüz yay (spring) animasyonları ('ease-in-out') önceliklendirilmelidir.
+● Content: İçerik yöntemi olarak MDX/Markdown yapısı (next-mdx-remote vb.) tercih edilmektedir. Markdown render işlemleri esnasında güvenlik ve XSS önlemlerine dikkat edilmelidir.
+
+4. GÜVENLİK VE GİZLİLİK (SECURITY BY DESIGN)
+------------------------------------------------------------------------------
+● Secret Management: Özel API anahtarlarını, CMS endpoint'lerini '.env.local' dosyasında tut. Client tarafına geçmesi gerekenler için `NEXT_PUBLIC_` önekini kullan ama sırları ifşa etme.
+● External Links: Portföy dışı dış linklerde mutlaka `target="_blank" rel="noopener noreferrer"` ikilisini kullan.
+
+==============================================
+UNUTMA: "Vibe" sadece görsellik değil, mühendislik kalitesidir! Temiz UI, Temiz Kod ve Yüksek Performans!
+==============================================

@@ -1,0 +1,81 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-primary);
+}
+
+.logoBracket {
+  color: var(--accent-teal);
+  transition: transform var(--transition-normal);
+}
+
+.logo:hover .logoBracket:first-child {
+  transform: translateX(-4px);
+}
+.logo:hover .logoBracket:last-child {
+  transform: translateX(4px);
+}
+
+.logoText {
+  letter-spacing: -0.05em;
+}
+
+.navLinks {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.navItem {
+  position: relative;
+}
+
+.link {
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color var(--transition-fast);
+  position: relative;
+  z-index: 2;
+}
+
+.link:hover {
+  color: var(--text-primary);
+}
+
+.active {
+  color: var(--bg-color) !important;
+}
+
+.activePill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--accent-teal);
+  border-radius: var(--radius-full);
+  z-index: -1;
+}
