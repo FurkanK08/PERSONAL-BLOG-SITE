@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import styles from "./profile.module.css";
 
 export default function AdminProfilePage() {
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
+    const [dragOver, setDragOver] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [form, setForm] = useState({
         name: "",
@@ -23,6 +25,7 @@ export default function AdminProfilePage() {
         cvUrl: "",
         skills: "",
         avatarEmoji: "👨‍💻",
+        avatarUrl: "",
     });
 
     useEffect(() => {
@@ -42,6 +45,7 @@ export default function AdminProfilePage() {
                         cvUrl: data.cvUrl || "",
                         skills: (data.skills || []).join(", "),
                         avatarEmoji: data.avatarEmoji || "👨‍💻",
+                        avatarUrl: data.avatarUrl || "",
                     });
                 }
             })
@@ -50,6 +54,45 @@ export default function AdminProfilePage() {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    async function uploadImage(file: File) {
+        if (!file.type.startsWith("image/")) {
+            setError("Lütfen bir resim dosyası seçin.");
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            setError("Resim boyutu 5MB'dan küçük olmalıdır.");
+            return;
+        }
+
+        setUploading(true);
+        setError("");
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        if (res.ok) {
+            const data = await res.json();
+            setForm((prev) => ({ ...prev, avatarUrl: data.url }));
+            setSuccess("Resim yüklendi! Profili kaydetmeyi unutma.");
+        } else {
+            const data = await res.json();
+            setError(data.error || "Resim yüklenirken hata oluştu.");
+        }
+        setUploading(false);
+    }
+
+    function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (file) uploadImage(file);
+    }
+
+    function handleDrop(e: React.DragEvent) {
+        e.preventDefault();
+        setDragOver(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) uploadImage(file);
     }
 
     async function handleSubmit(e: React.FormEvent) {
@@ -70,7 +113,7 @@ export default function AdminProfilePage() {
         });
 
         if (res.ok) {
-            setSuccess("Profil başarıyla güncellendi! Ana sayfa değişiklikler yansıtacak.");
+            setSuccess("Profil başarıyla güncellendi! Ana sayfa değişiklikleri yansıtacak.");
         } else {
             const data = await res.json();
             setError(data.error || "Bir hata oluştu.");
@@ -91,6 +134,71 @@ export default function AdminProfilePage() {
                 <div className={styles.loading}>Veriler yükleniyor...</div>
             ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
+
+                    {/* ─── AVATAR YÜKLEME ─── */}
+                    <div className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Profil Fotoğrafı</h2>
+
+                        <div className={styles.avatarSection}>
+                            {/* Mevcut avatar önizleme */}
+                            <div className={styles.avatarPreview}>
+                                {form.avatarUrl ? (
+                                    <Image
+                                        src={form.avatarUrl}
+                                        alt="Avatar"
+                                        width={120}
+                                        height={120}
+                                        className={styles.avatarImg}
+                                        unoptimized
+                                    />
+                                ) : (
+                                    <div className={styles.avatarPlaceholder}>
+                                        <span>{form.avatarEmoji}</span>
+                                        <p>Henüz fotoğraf yüklenmedi</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Drag & Drop yükleme alanı */}
+                            <div
+                                className={`${styles.dropZone} ${dragOver ? styles.dropZoneActive : ""} ${uploading ? styles.dropZoneUploading : ""}`}
+                                onClick={() => fileInputRef.current?.click()}
+                                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                                onDragLeave={() => setDragOver(false)}
+                                onDrop={handleDrop}
+                            >
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileInput}
+                                    style={{ display: "none" }}
+                                />
+                                {uploading ? (
+                                    <div className={styles.uploadingState}>
+                                        <div className={styles.spinner} />
+                                        <p>Cloudinary&apos;ye yükleniyor...</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className={styles.dropIcon}>📸</div>
+                                        <p className={styles.dropText}>
+                                            Resmi buraya sürükle ya da <span className={styles.dropLink}>tıkla</span>
+                                        </p>
+                                        <p className={styles.dropHint}>PNG, JPG, WEBP · Max 5MB · Otomatik kırpılır (400×400)</p>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Emoji fallback */}
+                        <div className={styles.field} style={{ marginTop: "1rem" }}>
+                            <label className={styles.label}>Emoji Avatar (resim yoksa gösterilir)</label>
+                            <input name="avatarEmoji" value={form.avatarEmoji} onChange={handleChange} className={styles.input} placeholder="👨‍💻" style={{ width: "120px" }} />
+                        </div>
+                    </div>
+
+                    {/* ─── KİMLİK ─── */}
                     <div className={styles.section}>
                         <h2 className={styles.sectionTitle}>Kimlik</h2>
                         <div className={styles.grid}>
@@ -99,19 +207,13 @@ export default function AdminProfilePage() {
                                 <input name="name" value={form.name} onChange={handleChange} className={styles.input} placeholder="Furkan K." />
                             </div>
                             <div className={styles.field}>
-                                <label className={styles.label}>Avatar Emoji</label>
-                                <input name="avatarEmoji" value={form.avatarEmoji} onChange={handleChange} className={styles.input} placeholder="👨‍💻" />
-                            </div>
-                        </div>
-                        <div className={styles.grid}>
-                            <div className={styles.field}>
                                 <label className={styles.label}>Ünvan (Başlık)</label>
                                 <input name="title" value={form.title} onChange={handleChange} className={styles.input} placeholder="Full-Stack Geliştirici" />
                             </div>
-                            <div className={styles.field}>
-                                <label className={styles.label}>Alt Başlık</label>
-                                <input name="subtitle" value={form.subtitle} onChange={handleChange} className={styles.input} placeholder="Modern Web Uygulamaları İnşa Eden" />
-                            </div>
+                        </div>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Alt Başlık</label>
+                            <input name="subtitle" value={form.subtitle} onChange={handleChange} className={styles.input} placeholder="Modern Web Uygulamaları İnşa Eden" />
                         </div>
                         <div className={styles.field}>
                             <label className={styles.label}>Hakkımda / Bio</label>
@@ -123,6 +225,7 @@ export default function AdminProfilePage() {
                         </div>
                     </div>
 
+                    {/* ─── İLETİŞİM & SOSYAL ─── */}
                     <div className={styles.section}>
                         <h2 className={styles.sectionTitle}>İletişim & Sosyal</h2>
                         <div className={styles.grid}>

@@ -39,7 +39,16 @@ export default async function Home() {
           <div className={styles.heroContent}>
             <div className={styles.avatarCol}>
               <div className={styles.avatarRing}>
-                <div className={styles.avatar}>{profile.avatarEmoji}</div>
+                {profile.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={profile.avatarUrl}
+                    alt={profile.name}
+                    className={styles.avatarImage}
+                  />
+                ) : (
+                  <div className={styles.avatar}>{profile.avatarEmoji}</div>
+                )}
               </div>
               <div className={styles.socialPills}>
                 {profile.githubUrl && (

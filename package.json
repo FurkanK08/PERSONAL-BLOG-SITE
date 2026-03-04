@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
     "framer-motion": "^12.35.0",
     "gray-matter": "^4.0.3",
     "jose": "^6.1.3",

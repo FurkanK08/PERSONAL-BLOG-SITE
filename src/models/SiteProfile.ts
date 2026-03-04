@@ -12,6 +12,7 @@ export interface ISiteProfile extends Document {
     cvUrl: string;
     skills: string[];
     avatarEmoji: string;
+    avatarUrl: string; // Cloudinary resim URL'si
 }
 
 const SiteProfileSchema: Schema = new Schema(
@@ -31,6 +32,7 @@ const SiteProfileSchema: Schema = new Schema(
         cvUrl: { type: String, default: "" },
         skills: { type: [String], default: ["Next.js", "React", "Node.js", "TypeScript", "MongoDB"] },
         avatarEmoji: { type: String, default: "👨‍💻" },
+        avatarUrl: { type: String, default: "" }, // Cloudinary'ye yüklenen resmin URL'si
     },
     { timestamps: true }
 );
