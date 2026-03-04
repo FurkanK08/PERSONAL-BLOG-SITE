@@ -10,6 +10,8 @@ const navLinks = [
     { name: "Ana Sayfa", href: "/" },
     { name: "Projeler", href: "/projects" },
     { name: "Blog", href: "/blog" },
+    { name: "Hakkımda", href: "/about" },
+    { name: "İletişim", href: "/contact" },
 ];
 
 export default function Navbar() {

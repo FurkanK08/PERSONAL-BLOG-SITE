@@ -27,10 +27,12 @@ export default async function Home() {
       Post.find({}).sort({ date: -1 }).limit(3).lean(),
       Project.find({}).sort({ date: -1 }).limit(3).lean(),
     ]);
-    if (profileData) profile = profileData;
-    posts = postsData as any[];
-    projects = projectsData as any[];
+    // Mongoose objelerini plain JS'e çevir (Client Component'e geçmek için)
+    if (profileData) profile = JSON.parse(JSON.stringify(profileData));
+    posts = JSON.parse(JSON.stringify(postsData));
+    projects = JSON.parse(JSON.stringify(projectsData));
   } catch (e) { /* DB bağlı değilse varsayılanları kullan */ }
 
   return <HomePage profile={profile} posts={posts} projects={projects} />;
 }
+
