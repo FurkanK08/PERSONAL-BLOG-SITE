@@ -1,0 +1,310 @@
+/* ─── Projects Page ─── */
+.pageContainer {
+    padding-top: 120px;
+    padding-bottom: 6rem;
+    min-height: 100vh;
+}
+
+.header {
+    margin-bottom: 3rem;
+    max-width: 640px;
+}
+
+.title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* ─── Filter Bar ─── */
+.filterBar {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filterBtn {
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+}
+
+.filterBtn:hover {
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+}
+
+.filterBtn.active {
+    background: rgba(6, 182, 212, 0.12);
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+}
+
+.filterCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-teal);
+    color: #0f172a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 0.4rem;
+}
+
+/* ─── Grid ─── */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ─── Card ─── */
+.card {
+    position: relative;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    border-color: rgba(6, 182, 212, 0.45);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px);
+}
+
+.cardGlow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.07) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.card:hover .cardGlow {
+    opacity: 1;
+}
+
+.cardContent {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.75rem;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.cardTitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.cardIcons {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.iconBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--surface-hover);
+    color: var(--text-muted);
+    transition: color 0.2s, background 0.2s;
+    text-decoration: none;
+}
+
+.iconBtn:hover {
+    background: rgba(6, 182, 212, 0.12);
+    color: var(--accent-teal);
+}
+
+.cardSummary {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    flex: 1;
+}
+
+.tagRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+}
+
+.tag {
+    padding: 0.22rem 0.65rem;
+    background: rgba(6, 182, 212, 0.07);
+    border: 1px solid rgba(6, 182, 212, 0.15);
+    border-radius: var(--radius-full);
+    color: var(--accent-teal);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.tag:hover {
+    background: rgba(6, 182, 212, 0.15);
+}
+
+.cardFooter {
+    padding: 1rem 1.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.detailsLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.18s, gap 0.15s;
+}
+
+.detailsLink:hover {
+    color: var(--accent-teal);
+    gap: 0.65rem;
+}
+
+/* ─── Empty State ─── */
+.emptyState {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    gap: 1.25rem;
+    color: var(--text-muted);
+}
+
+.emptyIcon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--surface-color);
+    border: 1px dashed var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.emptyTitle {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.emptyDesc {
+    font-size: 0.95rem;
+    max-width: 420px;
+    line-height: 1.6;
+}
+
+.emptyLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.emptyLink:hover {
+    border-color: var(--accent-teal);
+    color: var(--accent-teal);
+}
+
+/* ─── No results (filter) ─── */
+.noResults {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+}
+
+.noResults p {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+}
+
+.clearBtn {
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    color: var(--accent-teal);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.clearBtn:hover {
+    border-color: var(--accent-teal);
+}
+
+/* ─── Results count ─── */
+.resultsCount {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

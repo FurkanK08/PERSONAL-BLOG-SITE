@@ -431,6 +431,35 @@
     font-weight: 500;
 }
 
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--surface-color);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+    gap: 1rem;
+}
+
+.emptyState p {
+    font-size: 1.1rem;
+}
+
+.emptyState a {
+    color: var(--accent-teal);
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.emptyState a:hover {
+    text-decoration: underline;
+}
+
 /* Post List */
 .postList {
     display: flex;

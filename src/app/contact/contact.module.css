@@ -115,6 +115,7 @@
     cursor: pointer;
     transition: box-shadow 0.2s;
     min-height: 52px;
+    margin-top: 0.5rem;
 }
 
 .submitBtn:hover:not(:disabled) {

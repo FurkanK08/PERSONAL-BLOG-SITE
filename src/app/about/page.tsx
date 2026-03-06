@@ -14,16 +14,26 @@ export default async function AboutPage() {
     try {
         await connectDB();
         const data = await SiteProfile.findOne({}).lean();
-        if (data) profile = JSON.parse(JSON.stringify(data));
+        if (data) {
+            profile = JSON.parse(JSON.stringify(data));
+            // Türkçe karakter kontrolü: bozuk kaydedilmişse düzelt
+            const hasTurkish = (s: string) => /[çğıöşüÇĞİÖŞÜ]/.test(s);
+            const fixedBio = "Karmaşık problemleri, ölçeklenebilir mimariler ve kullanıcı odaklı arayüzlerle çözüyorum. Fikirden canlıya, dijital ürünler geliştiriyorum.";
+            if (profile.bio && !hasTurkish(profile.bio)) profile.bio = fixedBio;
+        }
     } catch { }
 
-    const timeline = [
+    const defaultTimeline = [
         { year: "2022", title: "Web'e İlk Adım", desc: "HTML, CSS ve JavaScript öğrenerek ilk projelerimi oluşturdum.", icon: <Globe size={20} /> },
         { year: "2023", title: "React & Next.js", desc: "Modern frontend framework'lerine geçiş yaparak portföy projeleri geliştirdim.", icon: <Code2 size={20} /> },
         { year: "2024", title: "Full-Stack Geliştirme", desc: "Node.js, MongoDB ve REST API tasarımıyla backend geliştirmeye başladım.", icon: <Zap size={20} /> },
         { year: "2025", title: "Profesyonel Projeler", desc: "Gerçek dünya projelerinde çalışarak uzmanlık alanlarımı genişlettim.", icon: <Terminal size={20} /> },
         { year: "2026", title: "Sürekli Gelişim", desc: "TypeScript, Cloud servisleri ve modern web teknolojileri üzerine çalışmaya devam ediyorum.", icon: <BookOpen size={20} /> },
     ];
+
+    const timeline: { year: string; title: string; desc: string; icon: React.ReactNode }[] = profile.timeline && profile.timeline.length > 0
+        ? profile.timeline.map((t: any) => ({ ...t, icon: <Zap size={20} /> }))
+        : defaultTimeline;
 
     return (
         <main className={styles.page}>
@@ -56,7 +66,7 @@ export default async function AboutPage() {
                 {/* Skills */}
                 {profile.skills && profile.skills.length > 0 && (
                     <section className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Teknoloji Stağım</h2>
+                        <h2 className={styles.sectionTitle}>Teknoloji Stack&apos;im</h2>
                         <div className={styles.skillGrid}>
                             {profile.skills.map((skill: string) => (
                                 <div key={skill} className={styles.skillCard}>

@@ -14,6 +14,7 @@ interface Profile {
     name: string; title: string; subtitle: string; bio: string;
     email: string; githubUrl: string; linkedinUrl: string;
     twitterUrl: string; cvUrl: string; skills: string[];
+    titleWords: string[];
     avatarEmoji: string; avatarUrl: string;
 }
 interface Post { slug: string; title: string; summary: string; date: string; }
@@ -93,7 +94,9 @@ export default function HomePage({
 }: {
     profile: Profile; posts: Post[]; projects: Project[];
 }) {
-    const titleWords = [profile.title, "Frontend Developer", "Backend Developer", "UI Enthusiast"];
+    const titleWords = (profile.titleWords && profile.titleWords.length > 0)
+        ? profile.titleWords
+        : ["Full-Stack Geliştirici", "Frontend Developer", "Backend Developer", "UI Enthusiast"];
     const heroRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
     const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
@@ -227,15 +230,15 @@ export default function HomePage({
             </section>
 
             {/* ─── FEATURED PROJECTS ─── */}
-            {projects.length > 0 && (
-                <section className={styles.section}>
-                    <div className="container">
-                        <Reveal>
-                            <div className={styles.sectionHead}>
-                                <h2 className={styles.sectionTitle}>Öne Çıkan Projeler</h2>
-                                <Link href="/projects" className={styles.seeAll}>Tümünü Gör <ArrowRight size={14} /></Link>
-                            </div>
-                        </Reveal>
+            <section className={styles.section}>
+                <div className="container">
+                    <Reveal>
+                        <div className={styles.sectionHead}>
+                            <h2 className={styles.sectionTitle}>Öne Çıkan Projeler</h2>
+                            <Link href="/projects" className={styles.seeAll}>Tümünü Gör <ArrowRight size={14} /></Link>
+                        </div>
+                    </Reveal>
+                    {projects.length > 0 ? (
                         <div className={styles.projectGrid}>
                             {projects.map((project, i) => (
                                 <Reveal key={project.slug} delay={i * 0.12}>
@@ -259,20 +262,27 @@ export default function HomePage({
                                 </Reveal>
                             ))}
                         </div>
-                    </div>
-                </section>
-            )}
-
-            {/* ─── LATEST POSTS ─── */}
-            {posts.length > 0 && (
-                <section className={styles.section}>
-                    <div className="container">
-                        <Reveal>
-                            <div className={styles.sectionHead}>
-                                <h2 className={styles.sectionTitle}>Son Yazılar</h2>
-                                <Link href="/blog" className={styles.seeAll}>Tümünü Gör <ArrowRight size={14} /></Link>
+                    ) : (
+                        <Reveal delay={0.1}>
+                            <div className={styles.emptyState}>
+                                <ExternalLink size={36} />
+                                <p>Projeler yakında eklenecek. <Link href="/projects">Projeler sayfasına git →</Link></p>
                             </div>
                         </Reveal>
+                    )}
+                </div>
+            </section>
+
+            {/* ─── LATEST POSTS ─── */}
+            <section className={styles.section}>
+                <div className="container">
+                    <Reveal>
+                        <div className={styles.sectionHead}>
+                            <h2 className={styles.sectionTitle}>Son Yazılar</h2>
+                            <Link href="/blog" className={styles.seeAll}>Tümünü Gör <ArrowRight size={14} /></Link>
+                        </div>
+                    </Reveal>
+                    {posts.length > 0 ? (
                         <div className={styles.postList}>
                             {posts.map((post, i) => (
                                 <Reveal key={post.slug} delay={i * 0.1}>
@@ -289,9 +299,16 @@ export default function HomePage({
                                 </Reveal>
                             ))}
                         </div>
-                    </div>
-                </section>
-            )}
+                    ) : (
+                        <Reveal delay={0.1}>
+                            <div className={styles.emptyState}>
+                                <Terminal size={36} />
+                                <p>Blog yazıları yakında gelecek. <Link href="/blog">Blog sayfasına git →</Link></p>
+                            </div>
+                        </Reveal>
+                    )}
+                </div>
+            </section>
 
             {/* ─── CONTACT CTA ─── */}
             <Reveal>
