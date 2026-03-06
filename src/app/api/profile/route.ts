@@ -7,12 +7,31 @@ import { getSession } from "@/lib/auth";
 export async function GET() {
     try {
         await connectDB();
-        let profile = await SiteProfile.findOne({}).lean();
+        let profile = await SiteProfile.findOne({});
         if (!profile) {
             // İlk kullanımda varsayılan profil oluştur
             profile = await SiteProfile.create({});
         }
-        return NextResponse.json(profile, { status: 200 });
+
+        // Auto-heal empty timelines
+        if (!profile.timeline || profile.timeline.length === 0) {
+            profile.timeline = [
+                { year: "2022", title: "Web'e İlk Adım", desc: "HTML, CSS ve JavaScript öğrenerek ilk projelerimi oluşturdum.", icon: "Globe" },
+                { year: "2023", title: "React & Next.js", desc: "Modern frontend framework'lerine geçiş yaparak portföy projeleri geliştirdim.", icon: "Code2" },
+                { year: "2024", title: "Full-Stack Geliştirme", desc: "Node.js, MongoDB ve REST API tasarımıyla backend geliştirmeye başladım.", icon: "Zap" },
+                { year: "2025", title: "Profesyonel Projeler", desc: "Gerçek dünya projelerinde çalışarak uzmanlık alanlarımı genişlettim.", icon: "Terminal" },
+                { year: "2026", title: "Sürekli Gelişim", desc: "TypeScript, Cloud servisleri ve modern web teknolojileri üzerine çalışmaya devam ediyorum.", icon: "BookOpen" }
+            ];
+            await profile.save();
+        }
+
+        // Auto-heal missing titleWords
+        if (!profile.titleWords || profile.titleWords.length === 0) {
+            profile.titleWords = ["Full-Stack Geliştirici", "Frontend Developer", "Backend Developer", "UI Enthusiast"];
+            await profile.save();
+        }
+
+        return NextResponse.json(profile.toJSON ? profile.toJSON() : profile, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Profil alınamadı" }, { status: 500 });
     }
@@ -28,15 +47,18 @@ export async function PUT(req: NextRequest) {
     try {
         const body = await req.json();
         await connectDB();
-        let profile = await SiteProfile.findOne({});
-        if (!profile) {
-            profile = await SiteProfile.create(body);
-        } else {
-            Object.assign(profile, body);
-            await profile.save();
-        }
+
+        // $set kullanarak sadece gelen alanları güncelle — diğer alanları silmez
+        const profile = await SiteProfile.findOneAndUpdate(
+            {},
+            { $set: body },
+            { new: true, upsert: true }
+        );
+
         return NextResponse.json(profile, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Profil güncellenemedi" }, { status: 500 });
+        console.error("Profile update error:", error);
+        return NextResponse.json({ error: "Profil güncellenemedi", detail: String(error) }, { status: 500 });
     }
 }
+

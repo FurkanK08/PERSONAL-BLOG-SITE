@@ -24,8 +24,10 @@ export default function AdminProfilePage() {
         twitterUrl: "",
         cvUrl: "",
         skills: "",
+        titleWords: "",
         avatarEmoji: "👨‍💻",
         avatarUrl: "",
+        timeline: [] as { year: string; title: string; desc: string; icon: string }[],
     });
 
     useEffect(() => {
@@ -44,8 +46,10 @@ export default function AdminProfilePage() {
                         twitterUrl: data.twitterUrl || "",
                         cvUrl: data.cvUrl || "",
                         skills: (data.skills || []).join(", "),
+                        titleWords: (data.titleWords || []).join(", "),
                         avatarEmoji: data.avatarEmoji || "👨‍💻",
                         avatarUrl: data.avatarUrl || "",
+                        timeline: data.timeline || [],
                     });
                 }
             })
@@ -54,6 +58,28 @@ export default function AdminProfilePage() {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    function handleTimelineChange(index: number, field: string, value: string) {
+        setForm((prev) => {
+            const newTimeline = [...prev.timeline];
+            newTimeline[index] = { ...newTimeline[index], [field]: value };
+            return { ...prev, timeline: newTimeline };
+        });
+    }
+
+    function addTimelineItem() {
+        setForm((prev) => ({
+            ...prev,
+            timeline: [...prev.timeline, { year: "", title: "", desc: "", icon: "Circle" }]
+        }));
+    }
+
+    function removeTimelineItem(index: number) {
+        setForm((prev) => ({
+            ...prev,
+            timeline: prev.timeline.filter((_, i) => i !== index)
+        }));
     }
 
     async function uploadImage(file: File) {
@@ -104,6 +130,7 @@ export default function AdminProfilePage() {
         const body = {
             ...form,
             skills: form.skills.split(",").map((s) => s.trim()).filter(Boolean),
+            titleWords: form.titleWords.split(",").map((s) => s.trim()).filter(Boolean),
         };
 
         const res = await fetch("/api/profile", {
@@ -223,6 +250,11 @@ export default function AdminProfilePage() {
                             <label className={styles.label}>Yetenekler / Teknolojiler (virgülle ayır)</label>
                             <input name="skills" value={form.skills} onChange={handleChange} className={styles.input} placeholder="Next.js, React, Node.js, TypeScript, MongoDB" />
                         </div>
+                        <div className={styles.field}>
+                            <label className={styles.label}>🔄 Ana Sayfa Döngüsel Başlık (virgülle ayır)</label>
+                            <input name="titleWords" value={form.titleWords} onChange={handleChange} className={styles.input} placeholder="Full-Stack Geliştirici, Frontend Developer, Backend Developer, UI Enthusiast" />
+                            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.35rem" }}>Ana sayfadaki dönen yazı animasyonu — her kelime sırayla görünür.</p>
+                        </div>
                     </div>
 
                     {/* ─── İLETİŞİM & SOSYAL ─── */}
@@ -252,6 +284,33 @@ export default function AdminProfilePage() {
                             <label className={styles.label}>Twitter / X URL</label>
                             <input name="twitterUrl" value={form.twitterUrl} onChange={handleChange} className={styles.input} placeholder="https://twitter.com/..." />
                         </div>
+                    </div>
+
+                    {/* ─── YOLCULUĞUM (TIMELINE) ─── */}
+                    <div className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Yolculuğum (Zaman Çizelgesi)</h2>
+                        <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>Ana sayfadaki "Hakkımda" bölümünde yer alan eğitim/kariyer geçmişiniz.</p>
+
+                        {form.timeline.map((item, index) => (
+                            <div key={index} className={styles.grid} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)" }}>
+                                <div className={styles.field}>
+                                    <label className={styles.label}>Yıl</label>
+                                    <input value={item.year} onChange={(e) => handleTimelineChange(index, "year", e.target.value)} className={styles.input} placeholder="Örn: 2024" />
+                                </div>
+                                <div className={styles.field}>
+                                    <label className={styles.label}>Başlık</label>
+                                    <input value={item.title} onChange={(e) => handleTimelineChange(index, "title", e.target.value)} className={styles.input} placeholder="Örn: Full-Stack Geliştirici" />
+                                </div>
+                                <div className={styles.field} style={{ gridColumn: "1 / -1" }}>
+                                    <label className={styles.label}>Açıklama</label>
+                                    <textarea value={item.desc} onChange={(e) => handleTimelineChange(index, "desc", e.target.value)} className={styles.textarea} rows={2} placeholder="Deneyim veya eğitim detayı..." />
+                                </div>
+                                <div className={styles.field} style={{ gridColumn: "1 / -1", display: "flex", justifyContent: "flex-end" }}>
+                                    <button type="button" onClick={() => removeTimelineItem(index)} style={{ color: "#ef4444", fontSize: "0.875rem", cursor: "pointer", background: "none", border: "none" }}>Öğeyi Sil</button>
+                                </div>
+                            </div>
+                        ))}
+                        <button type="button" onClick={addTimelineItem} style={{ color: "var(--accent-teal)", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", background: "none", border: "none", padding: "0.5rem 0" }}>+ Yeni Deneyim Ekle</button>
                     </div>
 
                     {error && <div className={styles.error}>{error}</div>}
