@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 import PageTransition from "@/components/layout/PageTransition";
 
 export default async function RootLayout({
@@ -25,6 +26,7 @@ export default async function RootLayout({
     <html lang="tr" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          <AnalyticsTracker />
           {!isAdmin && <Navbar />}
           <main>
             {isAdmin ? children : <PageTransition>{children}</PageTransition>}

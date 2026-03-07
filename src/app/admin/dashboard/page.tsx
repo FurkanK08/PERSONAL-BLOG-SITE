@@ -10,6 +10,7 @@ interface Project { _id: string; title: string; slug: string; date: string; }
 export default function AdminDashboard() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
+    const [visitors, setVisitors] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<"blog" | "projects">("blog");
     const [loading, setLoading] = useState(true);
     const [confirmSlug, setConfirmSlug] = useState<string | null>(null);
@@ -17,14 +18,18 @@ export default function AdminDashboard() {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
-            const [postsRes, projectsRes] = await Promise.all([
+            const [postsRes, projectsRes, visitorsRes] = await Promise.all([
                 fetch("/api/posts"),
                 fetch("/api/projects"),
+                fetch("/api/analytics"),
             ]);
             const postsData = await postsRes.json();
             const projectsData = await projectsRes.json();
+            const visitorsData = await visitorsRes.json();
+
             setPosts(Array.isArray(postsData) ? postsData : []);
             setProjects(Array.isArray(projectsData) ? projectsData : []);
+            setVisitors(visitorsData.total || 0);
             setLoading(false);
         }
         fetchData();
@@ -99,6 +104,13 @@ export default function AdminDashboard() {
                     <div>
                         <p className={styles.statNum}>{projects.length}</p>
                         <p className={styles.statLabel}>Proje</p>
+                    </div>
+                </div>
+                <div className={styles.statCard}>
+                    <span className={styles.statIcon}>👁️</span>
+                    <div>
+                        <p className={styles.statNum}>{visitors}</p>
+                        <p className={styles.statLabel}>Toplam Ziyaret (Sayfa/Tık)</p>
                     </div>
                 </div>
             </div>

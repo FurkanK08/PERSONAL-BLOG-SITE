@@ -154,3 +154,37 @@
     background: #ef4444;
     color: white;
 }
+
+/* ─── RESPONSIVE OVERRIDES ─── */
+@media (max-width: 768px) {
+    .cardHeader {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .name {
+        font-size: 1rem;
+    }
+
+    .date {
+        font-size: 0.75rem;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actionBtn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pendingBadge {
+        position: relative;
+        top: 0;
+        right: 0;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        width: fit-content;
+    }
+}

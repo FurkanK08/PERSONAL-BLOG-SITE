@@ -99,3 +99,93 @@
     overflow-y: auto;
     min-height: 100vh;
 }
+
+/* ─── MOBİL HEADER VE HAMBURGER ─── */
+.mobileHeader {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+}
+
+.mobileHeader .logo {
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.hamburgerBtn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 28px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 60;
+}
+
+.hamburgerLine {
+    width: 100%;
+    height: 2px;
+    background: #06b6d4;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
+.line1Open {
+    transform: rotate(45deg);
+}
+
+.line2Open {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.line3Open {
+    transform: rotate(-45deg);
+}
+
+/* ─── RESPONSIVE OVERRIDES ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 40;
+        background: #080f1e;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        width: 250px;
+    }
+
+    .sidebarOpen {
+        transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar .logo {
+        display: none;
+        /* Mobilde tepede görünecek */
+    }
+
+    .mobileHeader {
+        display: flex;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 1.5rem;
+        padding-top: calc(60px + 1.5rem);
+        /* mobile header payı */
+    }
+}

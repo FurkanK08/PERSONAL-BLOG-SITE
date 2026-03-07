@@ -23,9 +23,17 @@ export default function Navbar() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
+    // Mobil menü state
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    // Sayfa değiştiğinde mobil menüyü kapat
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [pathname]);
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setScrolled(latest > 50);
@@ -44,7 +52,9 @@ export default function Navbar() {
                     <span className={styles.logoText}>Furkan K.</span>
                     <span className={styles.logoBracket}>{"/>"}</span>
                 </Link>
-                <ul className={styles.navLinks}>
+
+                {/* --- DESKTOP MENÜ --- */}
+                <ul className={`${styles.navLinks} ${styles.desktopOnly}`}>
                     {navLinks.map((link) => {
                         const isActive = pathname === link.href;
                         return (
@@ -77,7 +87,49 @@ export default function Navbar() {
                         </li>
                     )}
                 </ul>
+
+                {/* --- MOBİL BUTONLAR --- */}
+                <div className={styles.mobileActions}>
+                    {mounted && (
+                        <button
+                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                            className={`${styles.themeToggle} ${styles.mobileThemeToggle}`}
+                            aria-label="Temayı Değiştir"
+                        >
+                            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+                        </button>
+                    )}
+                    <button
+                        className={styles.hamburgerBtn}
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        aria-label="Menüyü Aç/Kapat"
+                    >
+                        <div className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.line1Open : ""}`}></div>
+                        <div className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.line2Open : ""}`}></div>
+                        <div className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.line3Open : ""}`}></div>
+                    </button>
+                </div>
             </nav>
+
+            {/* --- MOBİL AÇILIR MENÜ --- */}
+            <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileMenuOpen : ""}`}>
+                <ul className={styles.mobileNavLinks}>
+                    {navLinks.map((link) => {
+                        const isActive = pathname === link.href;
+                        return (
+                            <li key={link.href} className={styles.mobileNavItem}>
+                                <Link
+                                    href={link.href}
+                                    className={`${styles.mobileLink} ${isActive ? styles.mobileActive : ""}`}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {link.name}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
         </motion.header>
     );
 }
