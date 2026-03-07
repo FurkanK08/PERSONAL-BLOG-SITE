@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Github, ExternalLink, FolderOpen } from "lucide-react";
 import styles from "./projects.module.css";
@@ -88,7 +89,14 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
                     </div>
                 ) : (
                     filtered.map((project) => (
-                        <article key={project.slug} className={styles.card}>
+                        <motion.article
+                            key={project.slug}
+                            className={styles.card}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5 }}
+                        >
                             <div className={styles.cardGlow} />
                             <div className={styles.cardContent}>
                                 <div className={styles.cardHeader}>
@@ -127,7 +135,7 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
                                     Detaylar <ArrowRight size={14} />
                                 </Link>
                             </div>
-                        </article>
+                        </motion.article>
                     ))
                 )}
             </div>

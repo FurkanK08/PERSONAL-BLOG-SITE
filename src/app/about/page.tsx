@@ -7,7 +7,13 @@ import styles from "./about.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
-    let profile: any = {
+    interface IProfile {
+        name: string; title: string; bio: string; email: string;
+        githubUrl: string; linkedinUrl: string; skills: string[];
+        avatarEmoji: string; avatarUrl: string; timeline?: any[];
+    }
+
+    let profile: IProfile = {
         name: "Furkan K.", title: "Full-Stack Geliştirici", bio: "", email: "",
         githubUrl: "", linkedinUrl: "", skills: [], avatarEmoji: "👨‍💻", avatarUrl: "",
     };
@@ -31,8 +37,8 @@ export default async function AboutPage() {
         { year: "2026", title: "Sürekli Gelişim", desc: "TypeScript, Cloud servisleri ve modern web teknolojileri üzerine çalışmaya devam ediyorum.", icon: <BookOpen size={20} /> },
     ];
 
-    const timeline: { year: string; title: string; desc: string; icon: React.ReactNode }[] = profile.timeline && profile.timeline.length > 0
-        ? profile.timeline.map((t: any) => ({ ...t, icon: <Zap size={20} /> }))
+    const timeline = profile.timeline && profile.timeline.length > 0
+        ? profile.timeline.map((t: { year: string; title: string; desc: string }) => ({ ...t, icon: <Zap size={20} /> }))
         : defaultTimeline;
 
     return (

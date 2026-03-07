@@ -177,6 +177,10 @@ export default function AdminProfilePage() {
                                         height={120}
                                         className={styles.avatarImg}
                                         unoptimized
+                                        quality={85}
+                                        placeholder="blur"
+                                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                                        sizes="120px"
                                     />
                                 ) : (
                                     <div className={styles.avatarPlaceholder}>

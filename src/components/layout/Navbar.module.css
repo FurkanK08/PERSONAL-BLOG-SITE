@@ -90,3 +90,22 @@
   border-radius: var(--radius-full);
   z-index: -1;
 }
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--surface-hover);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  margin-left: var(--spacing-sm);
+}
+
+.themeToggle:hover {
+  background: var(--accent-teal);
+  color: var(--bg-color);
+  transform: scale(1.05);
+}

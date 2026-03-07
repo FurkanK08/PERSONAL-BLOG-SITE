@@ -1,5 +1,5 @@
 :root {
-  /* Color Palette (Dark Navy & Teal/Orange) */
+  /* Default Color Palette (Dark Theme / Navy & Teal) */
   --bg-color: #0b1120;
   --surface-color: #111827;
   --surface-hover: #1f2937;
@@ -37,6 +37,25 @@
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --glass-bg: rgba(17, 24, 39, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme='light'] {
+  /* Light Theme Overrides */
+  --bg-color: #f9fafb;
+  --surface-color: #ffffff;
+  --surface-hover: #f3f4f6;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+
+  --accent-teal: #0891b2;
+  --accent-teal-hover: #06b6d4;
+
+  --border-color: #e5e7eb;
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
 }
 
 * {

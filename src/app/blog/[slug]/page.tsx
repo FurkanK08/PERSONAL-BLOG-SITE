@@ -7,6 +7,7 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import styles from "./slug.module.css";
 import { Metadata } from "next";
+import Comments from "./Comments";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +63,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                         fill
                         style={{ objectFit: 'cover' }}
                         priority
+                        quality={85}
+                        placeholder="blur"
+                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
             )}
@@ -92,6 +97,8 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 {/* @ts-ignore */}
                 <MDXRemote source={post.content} />
             </div>
+
+            <Comments postSlug={post.slug} />
         </article>
     );
 }
