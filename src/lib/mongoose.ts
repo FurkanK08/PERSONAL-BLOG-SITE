@@ -8,36 +8,43 @@ if (!MONGODB_URI) {
     );
 }
 
-// Global olarak mongoose connection'ı önbelleğe almak (Next.js HMR sorunlarını önlemek için)
-let cached = (global as any).mongoose;
-
-if (!cached) {
-    cached = (global as any).mongoose = { conn: null, promise: null };
+declare global {
+    // eslint-disable-next-line no-var
+    var mongoose: { conn: mongoose.Connection | null; promise: Promise<mongoose.Connection> | null } | undefined;
 }
 
-async function connectDB() {
-    if (cached.conn) {
-        return cached.conn;
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB(): Promise<mongoose.Connection> {
+    // cached'in tanımlı olduğundan eminiz (yukarıdaki if sayesinde)
+    const activeCache = cached!;
+
+    if (activeCache.conn) {
+        return activeCache.conn;
     }
 
-    if (!cached.promise) {
+    if (!activeCache.promise) {
         const opts = {
             bufferCommands: false,
         };
 
-        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-            return mongoose;
+        activeCache.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+            return mongoose.connection;
         });
     }
 
     try {
-        cached.conn = await cached.promise;
+        activeCache.conn = await activeCache.promise;
     } catch (e) {
-        cached.promise = null;
+        activeCache.promise = null;
         throw e;
     }
 
-    return cached.conn;
+    return activeCache.conn;
 }
 
 export default connectDB;

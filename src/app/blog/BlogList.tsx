@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Calendar, Search, FileText } from "lucide-react";
 import styles from "./blog.module.css";
@@ -74,7 +75,14 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                     </div>
                 ) : (
                     filtered.map((post) => (
-                        <article key={post.slug} className={styles.card}>
+                        <motion.article
+                            key={post.slug}
+                            className={styles.card}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.5 }}
+                        >
                             <Link href={`/blog/${post.slug}`} className={styles.cardLink}>
                                 <div className={styles.cardContent}>
                                     <div className={styles.meta}>
@@ -94,7 +102,7 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                                     </div>
                                 </div>
                             </Link>
-                        </article>
+                        </motion.article>
                     ))
                 )}
             </div>

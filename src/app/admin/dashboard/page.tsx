@@ -12,6 +12,7 @@ export default function AdminDashboard() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [activeTab, setActiveTab] = useState<"blog" | "projects">("blog");
     const [loading, setLoading] = useState(true);
+    const [confirmSlug, setConfirmSlug] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -30,15 +31,41 @@ export default function AdminDashboard() {
     }, []);
 
     async function handleDeletePost(slug: string) {
-        if (!confirm(`"${slug}" adlı yazıyı silmek istediğinizden emin misiniz?`)) return;
         const res = await fetch(`/api/posts/${slug}`, { method: "DELETE" });
-        if (res.ok) setPosts(posts.filter((p) => p.slug !== slug));
+        if (res.ok) {
+            setPosts(posts.filter((p) => p.slug !== slug));
+            setConfirmSlug(null);
+        }
     }
 
     async function handleDeleteProject(slug: string) {
-        if (!confirm(`"${slug}" adlı projeyi silmek istediğinizden emin misiniz?`)) return;
         const res = await fetch(`/api/projects/${slug}`, { method: "DELETE" });
-        if (res.ok) setProjects(projects.filter((p) => p.slug !== slug));
+        if (res.ok) {
+            setProjects(projects.filter((p) => p.slug !== slug));
+            setConfirmSlug(null);
+        }
+    }
+
+    // Inline onay butonlarını render eden yardımcı
+    function DeleteConfirm({ slug, onConfirm }: { slug: string; onConfirm: () => void }) {
+        if (confirmSlug === slug) {
+            return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Emin misiniz?</span>
+                    <button onClick={onConfirm} className={styles.deleteBtn} style={{ background: '#ef4444', color: 'white' }}>
+                        Evet, Sil
+                    </button>
+                    <button onClick={() => setConfirmSlug(null)} className={styles.editBtn}>
+                        İptal
+                    </button>
+                </div>
+            );
+        }
+        return (
+            <button onClick={() => setConfirmSlug(slug)} className={styles.deleteBtn}>
+                Sil
+            </button>
+        );
     }
 
     return (
@@ -104,7 +131,7 @@ export default function AdminDashboard() {
                                 </div>
                                 <div className={styles.rowActions}>
                                     <Link href={`/admin/editor?type=post&slug=${post.slug}`} className={styles.editBtn}>Düzenle</Link>
-                                    <button onClick={() => handleDeletePost(post.slug)} className={styles.deleteBtn}>Sil</button>
+                                    <DeleteConfirm slug={post.slug} onConfirm={() => handleDeletePost(post.slug)} />
                                 </div>
                             </div>
                         ))
@@ -126,7 +153,7 @@ export default function AdminDashboard() {
                                 </div>
                                 <div className={styles.rowActions}>
                                     <Link href={`/admin/editor?type=project&slug=${project.slug}`} className={styles.editBtn}>Düzenle</Link>
-                                    <button onClick={() => handleDeleteProject(project.slug)} className={styles.deleteBtn}>Sil</button>
+                                    <DeleteConfirm slug={project.slug} onConfirm={() => handleDeleteProject(project.slug)} />
                                 </div>
                             </div>
                         ))
@@ -136,3 +163,4 @@ export default function AdminDashboard() {
         </div>
     );
 }
+

@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./editor.module.css";
+import ImageGallery from "@/components/admin/ImageGallery";
 
 function EditorContent() {
     const router = useRouter();
@@ -15,6 +16,7 @@ function EditorContent() {
     const [fetching, setFetching] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
+    const [galleryOpen, setGalleryOpen] = useState(false);
 
     const [form, setForm] = useState({
         title: "",
@@ -165,10 +167,13 @@ function EditorContent() {
                         <label className={styles.label}>Kapak Görseli URL</label>
                         <div className={styles.uploadRow}>
                             <input name="imageUrl" value={form.imageUrl} onChange={handleChange} className={styles.input} placeholder="https://cloudinary.com/..." />
-                            <label className={styles.uploadBtn}>
-                                {loading ? "..." : "Yükle"}
-                                <input type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
-                            </label>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button type="button" onClick={() => setGalleryOpen(true)} className={styles.uploadBtn} style={{ background: 'var(--surface-hover)', color: 'var(--text-primary)' }}>Galeri</button>
+                                <label className={styles.uploadBtn}>
+                                    {loading ? "..." : "Yükle"}
+                                    <input type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
+                                </label>
+                            </div>
                         </div>
                         {form.imageUrl && (
                             <img src={form.imageUrl} alt="Önizleme" className={styles.preview} />
@@ -218,6 +223,12 @@ function EditorContent() {
                     </div>
                 </form>
             )}
+
+            <ImageGallery
+                isOpen={galleryOpen}
+                onClose={() => setGalleryOpen(false)}
+                onSelect={(url) => setForm((p) => ({ ...p, imageUrl: url }))}
+            />
         </div>
     );
 }

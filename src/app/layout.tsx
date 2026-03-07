@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Navbar from "@/components/layout/Navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,12 +22,14 @@ export default async function RootLayout({
   const isAdmin = pathname.startsWith("/admin");
 
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
       <body>
-        {!isAdmin && <Navbar />}
-        <main>
-          {isAdmin ? children : <PageTransition>{children}</PageTransition>}
-        </main>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false}>
+          {!isAdmin && <Navbar />}
+          <main>
+            {isAdmin ? children : <PageTransition>{children}</PageTransition>}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

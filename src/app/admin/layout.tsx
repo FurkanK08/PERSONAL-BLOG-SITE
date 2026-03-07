@@ -2,12 +2,27 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./layout.module.css";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const isLoginPage = pathname === "/admin/login";
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+        if (!isLoginPage) {
+            fetch("/api/messages/unread")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.count !== undefined) {
+                        setUnreadCount(data.count);
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+    }, [pathname, isLoginPage]);
 
     async function handleLogout() {
         await fetch("/api/auth/logout", { method: "POST" });
@@ -34,8 +49,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <Link href="/admin/profile" className={styles.navItem}>
                         👤 Profil & Hakkımda
                     </Link>
-                    <Link href="/admin/messages" className={styles.navItem}>
-                        📬 Mesajlar
+                    <Link href="/admin/messages" className={styles.navItem} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>📬 Mesajlar</span>
+                        {unreadCount > 0 && (
+                            <span style={{ background: '#ef4444', color: 'white', fontSize: '0.75rem', padding: '0.1rem 0.5rem', borderRadius: '1rem', fontWeight: 'bold' }}>
+                                {unreadCount}
+                            </span>
+                        )}
+                    </Link>
+                    <Link href="/admin/comments" className={styles.navItem}>
+                        💬 Yorumlar
                     </Link>
                     <Link href="/admin/editor?type=post" className={styles.navItem}>
                         ➕ Yeni Yazı

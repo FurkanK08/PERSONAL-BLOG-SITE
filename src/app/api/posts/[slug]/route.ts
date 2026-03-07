@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongoose";
 import { Post } from "@/models/Post";
+import { Comment } from "@/models/Comment";
 import { getSession } from "@/lib/auth";
 
 // GET - Tek bir yazıyı slug ile getir
@@ -43,7 +44,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ s
         await connectDB();
         const deleted = await Post.findOneAndDelete({ slug });
         if (!deleted) return NextResponse.json({ error: "Yazı bulunamadı" }, { status: 404 });
-        return NextResponse.json({ message: "Yazı silindi" }, { status: 200 });
+
+        // Cascade: Bu yazıya ait tüm yorumları da sil
+        await Comment.deleteMany({ postSlug: slug });
+
+        return NextResponse.json({ message: "Yazı ve ilgili yorumlar silindi" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Yazı silinirken hata oluştu" }, { status: 500 });
     }

@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+    const baseUrl = "https://furkankeles.vercel.app";
     return {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: '/admin/',
+            disallow: ['/admin/', '/api/'],
         },
-        sitemap: 'https://furkankeles.com/sitemap.xml',
+        sitemap: `${baseUrl}/sitemap.xml`,
     };
 }

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
@@ -18,6 +20,12 @@ export default function Navbar() {
     const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
     const { scrollY } = useScroll();
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setScrolled(latest > 50);
@@ -57,6 +65,17 @@ export default function Navbar() {
                             </li>
                         );
                     })}
+                    {mounted && (
+                        <li className={styles.navItem} style={{ display: 'flex', alignItems: 'center', marginLeft: '0.2rem' }}>
+                            <button
+                                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                className={styles.themeToggle}
+                                aria-label="Temayı Değiştir"
+                            >
+                                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+                            </button>
+                        </li>
+                    )}
                 </ul>
             </nav>
         </motion.header>
