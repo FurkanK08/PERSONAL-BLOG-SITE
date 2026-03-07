@@ -3,7 +3,7 @@
 import { motion, Variants } from "framer-motion";
 import styles from "./Hero.module.css";
 import Link from "next/link";
-import { ArrowRight, Terminal } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
     const containerVariants = {
@@ -32,10 +32,7 @@ export default function Hero() {
                 initial="hidden"
                 animate="visible"
             >
-                <motion.div variants={itemVariants} className={styles.badge}>
-                    <Terminal size={16} className={styles.badgeIcon} />
-                    <span>Sistemi ve Kodları İnşa Eden Güç</span>
-                </motion.div>
+
 
                 <motion.h1 variants={itemVariants} className={styles.headline}>
                     Modern Web Uygulamaları İnşa Eden <br />
