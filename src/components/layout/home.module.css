@@ -610,3 +610,77 @@
     color: var(--accent-teal);
     transform: translateY(-2px);
 }
+
+/* ─── RESPONSIVE (MOBILE) OVERRIDES ─── */
+@media (max-width: 768px) {
+
+    /* Hero Section */
+    .hero {
+        padding: 6rem 1rem 3rem;
+    }
+
+    .headline {
+        font-size: 2.5rem;
+    }
+
+    .bio {
+        font-size: 1rem;
+    }
+
+    .ctaRow {
+        justify-content: center;
+    }
+
+    /* Sections General */
+    .section {
+        padding: 4rem 1rem;
+    }
+
+    .sectionHead {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Projects Grid */
+    .projectGrid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Blog Posts List */
+    .postRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .postMeta {
+        margin-top: 0.5rem;
+    }
+
+    /* Contact Section */
+    .contactBox {
+        padding: 3rem 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    .contactTitle {
+        font-size: 2rem;
+    }
+
+    .contactBtns {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .contactBtns a {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Footer */
+    .footerInner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+}

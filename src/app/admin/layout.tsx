@@ -35,9 +35,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return <>{children}</>;
     }
 
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
     return (
         <div className={styles.wrapper}>
-            <aside className={styles.sidebar}>
+            {/* Mobil Toggle Header */}
+            <div className={styles.mobileHeader}>
+                <div className={styles.logo}>
+                    <span className={styles.logoIcon}>⚡</span>
+                    <span className={styles.logoText}>Admin Panel</span>
+                </div>
+                <button
+                    className={styles.hamburgerBtn}
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                >
+                    <div className={`${styles.hamburgerLine} ${sidebarOpen ? styles.line1Open : ""}`}></div>
+                    <div className={`${styles.hamburgerLine} ${sidebarOpen ? styles.line2Open : ""}`}></div>
+                    <div className={`${styles.hamburgerLine} ${sidebarOpen ? styles.line3Open : ""}`}></div>
+                </button>
+            </div>
+
+            <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
                 <div className={styles.logo}>
                     <span className={styles.logoIcon}>⚡</span>
                     <span className={styles.logoText}>Admin Panel</span>
