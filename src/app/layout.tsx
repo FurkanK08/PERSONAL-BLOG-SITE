@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Yazılım Geliştiricisi Portföy ve Blog Sayfası",
 };
 
-import CustomCursor from "@/components/ui/CustomCursor";
+
 import PageTransition from "@/components/layout/PageTransition";
 
 export default async function RootLayout({
