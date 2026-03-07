@@ -2,7 +2,11 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const SECRET_KEY = process.env.JWT_SECRET || "super-secret-key-for-development";
+const SECRET_KEY = process.env.JWT_SECRET;
+if (!SECRET_KEY) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+}
+
 const key = new TextEncoder().encode(SECRET_KEY);
 
 export async function encrypt(payload: any) {
@@ -25,7 +29,12 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function login(password: string) {
-    const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+        console.error("ADMIN_PASSWORD is not defined in environment variables");
+        return false;
+    }
+
 
     if (password === adminPassword) {
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 saat
