@@ -34,6 +34,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <Link href="/admin/profile" className={styles.navItem}>
                         👤 Profil & Hakkımda
                     </Link>
+                    <Link href="/admin/messages" className={styles.navItem}>
+                        📬 Mesajlar
+                    </Link>
                     <Link href="/admin/editor?type=post" className={styles.navItem}>
                         ➕ Yeni Yazı
                     </Link>

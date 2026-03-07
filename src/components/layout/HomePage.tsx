@@ -110,16 +110,7 @@ export default function HomePage({
                 <motion.div className={styles.orb2} style={{ y: bgY }} />
 
                 <div className={`container ${styles.heroInner}`}>
-                    {/* Badge */}
-                    <motion.div
-                        className={styles.heroBadge}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                    >
-                        <Terminal size={15} />
-                        <span>Sistemi ve Kodları İnşa Eden Güç</span>
-                    </motion.div>
+
 
                     <div className={styles.heroContent}>
                         {/* Avatar */}

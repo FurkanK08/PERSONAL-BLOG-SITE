@@ -38,13 +38,10 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
                     <div className={styles.emptyIcon}>
                         <FolderOpen size={36} />
                     </div>
-                    <h3 className={styles.emptyTitle}>Henüz proje eklenmedi</h3>
+                    <h3 className={styles.emptyTitle}>Henüz Proje Bulunmuyor</h3>
                     <p className={styles.emptyDesc}>
-                        Projeler yakında burada görünecek. Admin panelinden yeni proje ekleyebilirsiniz.
+                        Bu alana yakında yeni ve heyecan verici projeler eklenecektir. Lütfen daha sonra tekrar kontrol edin.
                     </p>
-                    <Link href="/admin" className={styles.emptyLink}>
-                        Admin Paneli <ArrowRight size={14} />
-                    </Link>
                 </div>
             </div>
         );
