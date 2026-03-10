@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongoose";
 import { Comment } from "@/models/Comment";
+<<<<<<< HEAD
 import DOMPurify from 'isomorphic-dompurify';
 import { rateLimit } from "@/lib/rate-limit";
+=======
+>>>>>>> 036e7c646c0c5266aa0f00c763b8a98018c0c26c
 
 // Yorum getirme (Sadece onaylananlar, postSlug'a göre)
 export async function GET(req: NextRequest) {
@@ -26,6 +29,7 @@ export async function GET(req: NextRequest) {
 // Ziyaretçinin yeni yorum eklemesi
 export async function POST(req: NextRequest) {
     try {
+<<<<<<< HEAD
         // Rate Limiting (IP tabanlı)
         // Production'da headers'tan IP okumak için "x-forwarded-for" kullanılır. Localde "127.0.0.1"
         const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
@@ -36,12 +40,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Çok fazla istek yapıldı. Lütfen daha sonra tekrar deneyin." }, { status: 429 });
         }
 
+=======
+>>>>>>> 036e7c646c0c5266aa0f00c763b8a98018c0c26c
         const { postSlug, name, content } = await req.json();
 
         if (!postSlug || !name || !content) {
             return NextResponse.json({ error: "Eksik alanlar var" }, { status: 400 });
         }
 
+<<<<<<< HEAD
         // Girdilerin Sanitizasyonu (XSS engelleme)
         const sanitizedName = DOMPurify.sanitize(name.trim());
         const sanitizedContent = DOMPurify.sanitize(content.trim());
@@ -60,6 +67,13 @@ export async function POST(req: NextRequest) {
             postSlug: DOMPurify.sanitize(postSlug.trim()),
             name: sanitizedName,
             content: sanitizedContent,
+=======
+        await connectDB();
+        const newComment = await Comment.create({
+            postSlug,
+            name,
+            content,
+>>>>>>> 036e7c646c0c5266aa0f00c763b8a98018c0c26c
             isApproved: false // Admin onayı bekleyecek
         });
 
