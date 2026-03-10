@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongoose";
 import { Comment } from "@/models/Comment";
+import DOMPurify from 'isomorphic-dompurify';
+import { rateLimit } from "@/lib/rate-limit";
 
 // Yorum getirme (Sadece onaylananlar, postSlug'a göre)
 export async function GET(req: NextRequest) {
@@ -24,17 +26,40 @@ export async function GET(req: NextRequest) {
 // Ziyaretçinin yeni yorum eklemesi
 export async function POST(req: NextRequest) {
     try {
+        // Rate Limiting (IP tabanlı)
+        // Production'da headers'tan IP okumak için "x-forwarded-for" kullanılır. Localde "127.0.0.1"
+        const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
+        const limitCheck = rateLimit.check(ip);
+
+        // Rate limit aşımı varsa engelle
+        if (!limitCheck || !limitCheck.success) {
+            return NextResponse.json({ error: "Çok fazla istek yapıldı. Lütfen daha sonra tekrar deneyin." }, { status: 429 });
+        }
+
         const { postSlug, name, content } = await req.json();
 
         if (!postSlug || !name || !content) {
             return NextResponse.json({ error: "Eksik alanlar var" }, { status: 400 });
         }
 
+        // Girdilerin Sanitizasyonu (XSS engelleme)
+        const sanitizedName = DOMPurify.sanitize(name.trim());
+        const sanitizedContent = DOMPurify.sanitize(content.trim());
+
+        if (!sanitizedName || !sanitizedContent) {
+            return NextResponse.json({ error: "Geçersiz giriş algılandı" }, { status: 400 });
+        }
+
+        // Boyut kontrolü
+        if (sanitizedName.length > 50 || sanitizedContent.length > 1000) {
+            return NextResponse.json({ error: "Girdi çok uzun" }, { status: 400 });
+        }
+
         await connectDB();
         const newComment = await Comment.create({
-            postSlug,
-            name,
-            content,
+            postSlug: DOMPurify.sanitize(postSlug.trim()),
+            name: sanitizedName,
+            content: sanitizedContent,
             isApproved: false // Admin onayı bekleyecek
         });
 

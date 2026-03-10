@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { title, slug, summary, content, date, imageUrl } = body;
+        const { title, slug, summary, content, date, imageUrl, externalUrl } = body;
 
 
         if (!title || !slug || !summary || !content) {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Bu slug zaten kullanılmakta" }, { status: 409 });
         }
 
-        const newPost = await Post.create({ title, slug, summary, content, date: date || new Date(), imageUrl });
+        const newPost = await Post.create({ title, slug, summary, content, date: date || new Date(), imageUrl, externalUrl });
 
         return NextResponse.json(newPost, { status: 201 });
     } catch (error) {

@@ -90,6 +90,20 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 </div>
                 <h1 className={styles.title}>{post.title}</h1>
                 {post.summary && <p className={styles.summary}>{post.summary}</p>}
+
+                {post.externalUrl && (
+                    <div style={{ marginTop: '1.5rem' }}>
+                        <a
+                            href={post.externalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.projectLinkBtnSec}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                        >
+                            Bu yazıyı orijinal kaynağında oku ↗
+                        </a>
+                    </div>
+                )}
             </header>
 
 

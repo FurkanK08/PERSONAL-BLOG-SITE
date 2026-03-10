@@ -27,6 +27,7 @@ function EditorContent() {
         githubUrl: "",
         liveUrl: "",
         imageUrl: "",
+        externalUrl: "",
         date: new Date().toISOString().split("T")[0],
     });
 
@@ -48,6 +49,7 @@ function EditorContent() {
                             githubUrl: data.githubUrl || "",
                             liveUrl: data.liveUrl || "",
                             imageUrl: data.imageUrl || "",
+                            externalUrl: data.externalUrl || "",
                             date: data.date ? data.date.split("T")[0] : new Date().toISOString().split("T")[0],
                         });
                     }
@@ -108,7 +110,7 @@ function EditorContent() {
         const method = isEdit ? "PUT" : "POST";
 
         const body = type === "post"
-            ? { title: form.title, slug: form.slug, summary: form.summary, content: form.content, date: form.date, imageUrl: form.imageUrl }
+            ? { title: form.title, slug: form.slug, summary: form.summary, content: form.content, date: form.date, imageUrl: form.imageUrl, externalUrl: form.externalUrl }
             : {
                 title: form.title, slug: form.slug, summary: form.summary,
                 content: form.content, date: form.date, imageUrl: form.imageUrl,
@@ -162,6 +164,13 @@ function EditorContent() {
                         <label className={styles.label}>Özet *</label>
                         <input name="summary" value={form.summary} onChange={handleChange} className={styles.input} placeholder="Kısa bir özet..." required />
                     </div>
+
+                    {!isProject && (
+                        <div className={styles.field}>
+                            <label className={styles.label}>Dış Bağlantı URL (Medium vb.)</label>
+                            <input name="externalUrl" value={form.externalUrl} onChange={handleChange} className={styles.input} placeholder="https://medium.com/@kullanici/..." />
+                        </div>
+                    )}
 
                     <div className={styles.field}>
                         <label className={styles.label}>Kapak Görseli URL</label>

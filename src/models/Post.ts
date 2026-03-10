@@ -7,6 +7,7 @@ export interface IPost extends Document {
     content: string; // MDX content as string
     date: Date;
     imageUrl?: string;
+    externalUrl?: string;
 }
 
 
@@ -18,6 +19,7 @@ const PostSchema: Schema = new Schema(
         content: { type: String, required: true },
         date: { type: Date, default: Date.now },
         imageUrl: { type: String, required: false },
+        externalUrl: { type: String, required: false },
 
     },
     { timestamps: true }
