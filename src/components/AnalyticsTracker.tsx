@@ -1,18 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { usePathname } from "next/navigation";
 
-export default function AnalyticsTracker() {
+function AnalyticsTrackerInner() {
     const pathname = usePathname();
-    const hasLogged = useRef(false); // Sadece bir kere istek atsın
+    const hasLogged = useRef(false);
 
     useEffect(() => {
-        // Localhostta (geliştirme ortamında) sayacı artırmasını önlemek için (isteğe bağlı yoruma alınabilir)
-        // if (process.env.NODE_ENV === "development") return;
-
-        // Admin sayfalarında istatistik turmamıza gerek yok
-        if (pathname && pathname.startsWith("/admin")) return;
+        if (!pathname || pathname.startsWith("/admin")) return;
 
         const recordVisit = async () => {
             if (hasLogged.current) return;
@@ -25,7 +21,7 @@ export default function AnalyticsTracker() {
                     body: JSON.stringify({ path: pathname })
                 });
             } catch (e) {
-                console.error("Analytics fetch failed");
+                console.error("Analytics fetch failed", e);
             }
         };
 
@@ -38,3 +34,12 @@ export default function AnalyticsTracker() {
 
     return null;
 }
+
+export default function AnalyticsTracker() {
+    return (
+        <Suspense fallback={null}>
+            <AnalyticsTrackerInner />
+        </Suspense>
+    );
+}
+

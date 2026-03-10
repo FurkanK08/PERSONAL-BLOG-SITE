@@ -2,32 +2,44 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import styles from "./layout.module.css";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const isLoginPage = pathname === "/admin/login";
     const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
+        let isMounted = true;
         if (!isLoginPage) {
             fetch("/api/messages/unread")
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error("Fetch failed");
+                    return res.json();
+                })
                 .then(data => {
-                    if (data.count !== undefined) {
+                    if (isMounted && data && typeof data.count === 'number') {
                         setUnreadCount(data.count);
                     }
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error("Unread messages fetch error:", err));
         }
+
+        return () => {
+            isMounted = false;
+        };
     }, [pathname, isLoginPage]);
 
     async function handleLogout() {
-        await fetch("/api/auth/logout", { method: "POST" });
-        router.push("/admin/login");
-        router.refresh();
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+            router.push("/admin/login");
+            router.refresh();
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
     }
 
     // Login sayfasında sidebar yoktur — sadece içerik gösterilir
@@ -96,5 +108,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </aside>
             <main className={styles.main}>{children}</main>
         </div>
+    );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Yükleniyor...</div>}>
+            <AdminLayoutInner>{children}</AdminLayoutInner>
+        </Suspense>
     );
 }
