@@ -10,6 +10,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isLoginPage = pathname === "/admin/login";
     const [unreadCount, setUnreadCount] = useState(0);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -46,8 +47,6 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     if (isLoginPage) {
         return <>{children}</>;
     }
-
-    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <div className={styles.wrapper}>
