@@ -63,6 +63,23 @@
     color: white !important;
 }
 
+.toolbarSelect {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: none;
+    font-size: 14px;
+    margin: 0 4px;
+}
+
+.toolbarSelect option {
+    background: var(--surface-bg);
+    color: var(--text-primary);
+}
+
 .editorContent {
     flex: 1;
     padding: 20px;
