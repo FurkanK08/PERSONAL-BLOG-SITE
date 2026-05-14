@@ -16,6 +16,7 @@ import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
 import TextAlign from "@tiptap/extension-text-align";
 import { common, createLowlight } from "lowlight";
+import { FontSize } from "./extensions/FontSize";
 import EditorToolbar from "./EditorToolbar";
 import styles from "./rich-editor.module.css";
 import { useEffect } from "react";
@@ -54,6 +55,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "İçe
                 lowlight,
             }),
             TextStyle,
+            FontSize,
             Color,
             TextAlign.configure({
                 types: ['heading', 'paragraph', 'image'],

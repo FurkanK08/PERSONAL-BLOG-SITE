@@ -89,6 +89,31 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             </div>
 
             <div className={styles.toolbarGroup}>
+                <select
+                    className={styles.toolbarSelect}
+                    title="Yazı Boyutu"
+                    onChange={(e) => {
+                        if (e.target.value === "default") {
+                            editor.chain().focus().unsetFontSize().run();
+                        } else {
+                            editor.chain().focus().setFontSize(e.target.value).run();
+                        }
+                    }}
+                    value={editor.getAttributes('textStyle').fontSize || "default"}
+                    style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border-color)', background: 'var(--surface-bg)', color: 'var(--text-primary)', cursor: 'pointer', outline: 'none' }}
+                >
+                    <option value="default">Varsayılan Boyut</option>
+                    <option value="12px">12px (Çok Küçük)</option>
+                    <option value="14px">14px (Küçük)</option>
+                    <option value="16px">16px (Normal)</option>
+                    <option value="18px">18px (Orta)</option>
+                    <option value="20px">20px (Büyük)</option>
+                    <option value="24px">24px (Çok Büyük)</option>
+                    <option value="30px">30px (Dev)</option>
+                </select>
+            </div>
+
+            <div className={styles.toolbarGroup}>
                 <button
                     type="button"
                     onClick={() => editor.chain().focus().toggleBold().run()}
