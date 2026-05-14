@@ -1,22 +1,24 @@
 import connectDB from "@/lib/mongoose";
-import { Post } from "@/models/Post";
+import { Post as PostModel } from "@/models/Post";
 import styles from "./blog.module.css";
 import BlogList from "./BlogList";
+import { Post } from "@/types";
 
 export const metadata = {
     title: "Blog — Furkan K.",
     description: "Yazılım geliştirme, modern mimariler ve teknik tecrübelerim üzerine notlar.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function BlogPage() {
-    let posts: any[] = [];
+    let posts: Post[] = [];
     try {
         await connectDB();
-        posts = await Post.find({}).sort({ date: -1 }).lean() as any[];
-        posts = JSON.parse(JSON.stringify(posts));
+        const data = await PostModel.find({}).sort({ date: -1 }).lean();
+        posts = JSON.parse(JSON.stringify(data));
     } catch (e) {
+        console.error("Blog list fetch error:", e);
         posts = [];
     }
 

@@ -1,22 +1,20 @@
 import connectDB from "@/lib/mongoose";
 import { SiteProfile } from "@/models/SiteProfile";
 import Link from "next/link";
+import Image from "next/image";
 import { Terminal, Code2, Zap, Globe, BookOpen, ArrowRight } from "lucide-react";
 import styles from "./about.module.css";
+import { Profile, TimelineItem } from "@/types";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function AboutPage() {
-    interface IProfile {
-        name: string; title: string; bio: string; email: string;
-        githubUrl: string; linkedinUrl: string; skills: string[];
-        avatarEmoji: string; avatarUrl: string; timeline?: any[];
-    }
-
-    let profile: IProfile = {
+    let profile: Profile = {
         name: "Furkan K.", title: "Full-Stack Geliştirici", bio: "", email: "",
-        githubUrl: "", linkedinUrl: "", skills: [], avatarEmoji: "👨‍💻", avatarUrl: "",
+        githubUrl: "", linkedinUrl: "", subtitle: "", twitterUrl: "", cvUrl: "",
+        skills: [], titleWords: [], avatarEmoji: "👨‍💻", avatarUrl: "",
     };
+
     try {
         await connectDB();
         const data = await SiteProfile.findOne({}).lean();
@@ -27,9 +25,11 @@ export default async function AboutPage() {
             const fixedBio = "Karmaşık problemleri, ölçeklenebilir mimariler ve kullanıcı odaklı arayüzlerle çözüyorum. Fikirden canlıya, dijital ürünler geliştiriyorum.";
             if (profile.bio && !hasTurkish(profile.bio)) profile.bio = fixedBio;
         }
-    } catch { }
+    } catch (e) {
+        console.error("About page data fetch error:", e);
+    }
 
-    const defaultTimeline = [
+    const defaultTimeline: (Omit<TimelineItem, 'icon'> & { icon: React.ReactNode })[] = [
         { year: "2022", title: "Web'e İlk Adım", desc: "HTML, CSS ve JavaScript öğrenerek ilk projelerimi oluşturdum.", icon: <Globe size={20} /> },
         { year: "2023", title: "React & Next.js", desc: "Modern frontend framework'lerine geçiş yaparak portföy projeleri geliştirdim.", icon: <Code2 size={20} /> },
         { year: "2024", title: "Full-Stack Geliştirme", desc: "Node.js, MongoDB ve REST API tasarımıyla backend geliştirmeye başladım.", icon: <Zap size={20} /> },
@@ -38,7 +38,7 @@ export default async function AboutPage() {
     ];
 
     const timeline = profile.timeline && profile.timeline.length > 0
-        ? profile.timeline.map((t: { year: string; title: string; desc: string }) => ({ ...t, icon: <Zap size={20} /> }))
+        ? profile.timeline.map((t) => ({ ...t, icon: <Zap size={20} /> }))
         : defaultTimeline;
 
     return (
@@ -49,7 +49,7 @@ export default async function AboutPage() {
                 <section className={styles.hero}>
                     <div className={styles.avatarWrap}>
                         {profile.avatarUrl
-                            ? <img src={profile.avatarUrl} alt={profile.name} className={styles.avatar} />
+                            ? <Image src={profile.avatarUrl} alt={profile.name} width={150} height={150} className={styles.avatar} />
                             : <div className={styles.avatarEmoji}>{profile.avatarEmoji}</div>
                         }
                     </div>

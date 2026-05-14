@@ -1,22 +1,24 @@
 import connectDB from "@/lib/mongoose";
-import { Project } from "@/models/Project";
+import { Project as ProjectModel } from "@/models/Project";
 import styles from "./projects.module.css";
 import ProjectsGrid from "./ProjectsGrid";
+import { Project } from "@/types";
 
 export const metadata = {
     title: "Projeler — Furkan K.",
     description: "Geliştirdiğim projeler, kullandığım teknolojiler ve açık kaynak çalışmalarım.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function ProjectsPage() {
-    let projects: any[] = [];
+    let projects: Project[] = [];
     try {
         await connectDB();
-        projects = await Project.find({}).sort({ date: -1 }).lean() as any[];
-        projects = JSON.parse(JSON.stringify(projects));
+        const data = await ProjectModel.find({}).sort({ date: -1 }).lean();
+        projects = JSON.parse(JSON.stringify(data));
     } catch (e) {
+        console.error("Projects list fetch error:", e);
         projects = [];
     }
 

@@ -1,5 +1,5 @@
 import connectDB from "@/lib/mongoose";
-import { Post } from "@/models/Post";
+import { Post as PostModel } from "@/models/Post";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -8,13 +8,15 @@ import Image from "next/image";
 import styles from "./slug.module.css";
 import { Metadata } from "next";
 import Comments from "./Comments";
+import { Post } from "@/types";
+import JsonLd from "@/components/JsonLd";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     await connectDB();
-    const post = await Post.findOne({ slug }).lean();
+    const post = await PostModel.findOne({ slug }).lean();
 
     if (!post) return { title: "Yazı Bulunamadı" };
 
@@ -30,14 +32,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-
     const { slug } = await params;
 
-    let post: any = null;
+    let post: Post | null = null;
     try {
         await connectDB();
-        post = await Post.findOne({ slug }).lean();
+        const data = await PostModel.findOne({ slug }).lean();
+        if (data) {
+            post = JSON.parse(JSON.stringify(data));
+        }
     } catch (e) {
+        console.error("Blog post fetch error:", e);
         return notFound();
     }
 
@@ -49,8 +54,23 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     const wordCount = post.content.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200);
 
+    const articleSchema = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.summary,
+        "image": post.imageUrl,
+        "datePublished": post.date,
+        "author": {
+            "@type": "Person",
+            "name": "Furkan Keleş"
+        }
+    };
+
     return (
-        <article className={`container ${styles.articleContainer}`}>
+        <>
+            <JsonLd data={articleSchema} />
+            <article className={`container ${styles.articleContainer}`}>
             <Link href="/blog" className={styles.backLink}>
                 <ArrowLeft size={16} /> Blog&apos;a Dön
             </Link>
@@ -75,7 +95,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 <div className={styles.meta}>
                     <div className={styles.metaItem}>
                         <Calendar size={14} />
-                        <time dateTime={(post.date as Date)?.toString()}>
+                        <time dateTime={(post.date as unknown as Date)?.toString()}>
                             {new Date(post.date).toLocaleDateString("tr-TR", {
                                 year: "numeric",
                                 month: "long",
@@ -114,5 +134,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
             <Comments postSlug={post.slug} />
         </article>
+        </>
     );
 }

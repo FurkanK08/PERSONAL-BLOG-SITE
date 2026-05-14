@@ -2,23 +2,14 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
     ArrowRight, Github, Linkedin, Twitter, Mail, Download,
     Terminal, ExternalLink, ChevronDown,
 } from "lucide-react";
 import styles from "./home.module.css";
-
-/* ── Types ─────────────────────────────────────────────── */
-interface Profile {
-    name: string; title: string; subtitle: string; bio: string;
-    email: string; githubUrl: string; linkedinUrl: string;
-    twitterUrl: string; cvUrl: string; skills: string[];
-    titleWords: string[];
-    avatarEmoji: string; avatarUrl: string;
-}
-interface Post { slug: string; title: string; summary: string; date: string; }
-interface Project { slug: string; title: string; summary: string; technologies?: string[]; }
+import { Profile, Post, Project } from "@/types";
 
 /* ── Typewriter ─────────────────────────────────────────── */
 function Typewriter({ words, speed = 80 }: { words: string[]; speed?: number }) {
@@ -122,7 +113,7 @@ export default function HomePage({
                         >
                             <div className={styles.avatarRing}>
                                 {profile.avatarUrl
-                                    ? <img src={profile.avatarUrl} alt={profile.name} className={styles.avatarImage} />
+                                    ? <Image src={profile.avatarUrl} alt={profile.name} width={170} height={170} className={styles.avatarImage} priority />
                                     : <div className={styles.avatar}>{profile.avatarEmoji}</div>
                                 }
                             </div>

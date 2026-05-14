@@ -1,5 +1,5 @@
 import connectDB from "@/lib/mongoose";
-import { Project } from "@/models/Project";
+import { Project as ProjectModel } from "@/models/Project";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -7,13 +7,15 @@ import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import styles from "../../blog/[slug]/slug.module.css";
 import Image from "next/image";
 import { Metadata } from "next";
+import { Project } from "@/types";
+import JsonLd from "@/components/JsonLd";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     await connectDB();
-    const project = await Project.findOne({ slug }).lean();
+    const project = await ProjectModel.findOne({ slug }).lean();
 
     if (!project) return { title: "Proje Bulunamadı" };
 
@@ -29,14 +31,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function ProjectPost({ params }: { params: Promise<{ slug: string }> }) {
-
     const { slug } = await params;
 
-    let project: any = null;
+    let project: Project | null = null;
     try {
         await connectDB();
-        project = await Project.findOne({ slug }).lean();
+        const data = await ProjectModel.findOne({ slug }).lean();
+        if (data) {
+            project = JSON.parse(JSON.stringify(data));
+        }
     } catch (e) {
+        console.error("Project fetch error:", e);
         return notFound();
     }
 
@@ -44,8 +49,25 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
         return notFound();
     }
 
+    const projectSchema = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": project.title,
+        "description": project.summary,
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "author": {
+            "@type": "Person",
+            "name": "Furkan Keleş"
+        },
+        "url": project.liveUrl,
+        "image": project.imageUrl
+    };
+
     return (
-        <article className={`container ${styles.articleContainer}`}>
+        <>
+            <JsonLd data={projectSchema} />
+            <article className={`container ${styles.articleContainer}`}>
             <Link href="/projects" className={styles.backLink}>
                 <ArrowLeft size={16} /> Projelere Dön
             </Link>
@@ -104,5 +126,6 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                 <MDXRemote source={project.content} />
             </div>
         </article>
+        </>
     );
 }
