@@ -28,6 +28,8 @@ function EditorContent() {
         liveUrl: "",
         imageUrl: "",
         externalUrl: "",
+        tags: "",
+        category: "Genel",
         date: new Date().toISOString().split("T")[0],
     });
 
@@ -50,6 +52,8 @@ function EditorContent() {
                             liveUrl: data.liveUrl || "",
                             imageUrl: data.imageUrl || "",
                             externalUrl: data.externalUrl || "",
+                            tags: (data.tags || []).join(", "),
+                            category: data.category || "Genel",
                             date: data.date ? data.date.split("T")[0] : new Date().toISOString().split("T")[0],
                         });
                     }
@@ -58,7 +62,7 @@ function EditorContent() {
         }
     }, [isEdit, editSlug, type]);
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
 
@@ -110,7 +114,13 @@ function EditorContent() {
         const method = isEdit ? "PUT" : "POST";
 
         const body = type === "post"
-            ? { title: form.title, slug: form.slug, summary: form.summary, content: form.content, date: form.date, imageUrl: form.imageUrl, externalUrl: form.externalUrl }
+            ? {
+                title: form.title, slug: form.slug, summary: form.summary,
+                content: form.content, date: form.date, imageUrl: form.imageUrl,
+                externalUrl: form.externalUrl,
+                tags: form.tags.split(",").map(t => t.trim()).filter(Boolean),
+                category: form.category
+            }
             : {
                 title: form.title, slug: form.slug, summary: form.summary,
                 content: form.content, date: form.date, imageUrl: form.imageUrl,
@@ -164,6 +174,25 @@ function EditorContent() {
                         <label className={styles.label}>Özet *</label>
                         <input name="summary" value={form.summary} onChange={handleChange} className={styles.input} placeholder="Kısa bir özet..." required />
                     </div>
+
+                    {!isProject && (
+                        <div className={styles.grid}>
+                            <div className={styles.field}>
+                                <label className={styles.label}>Kategori</label>
+                                <select name="category" value={form.category} onChange={handleChange} className={styles.input}>
+                                    <option value="Genel">Genel</option>
+                                    <option value="Yazılım">Yazılım</option>
+                                    <option value="Tasarım">Tasarım</option>
+                                    <option value="Teknoloji">Teknoloji</option>
+                                    <option value="Kişisel">Kişisel</option>
+                                </select>
+                            </div>
+                            <div className={styles.field}>
+                                <label className={styles.label}>Etiketler (Virgülle ayırın)</label>
+                                <input name="tags" value={form.tags} onChange={handleChange} className={styles.input} placeholder="react, nextjs, typescript" />
+                            </div>
+                        </div>
+                    )}
 
                     {!isProject && (
                         <div className={styles.field}>

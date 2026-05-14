@@ -30,6 +30,8 @@ export interface Post {
     date: string;
     imageUrl?: string;
     externalUrl?: string;
+    tags: string[];
+    category: string;
 }
 
 export interface Project {

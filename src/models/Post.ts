@@ -8,6 +8,8 @@ export interface IPost extends Document {
     date: Date;
     imageUrl?: string;
     externalUrl?: string;
+    tags: string[];
+    category: string;
 }
 
 
@@ -20,7 +22,8 @@ const PostSchema: Schema = new Schema(
         date: { type: Date, default: Date.now },
         imageUrl: { type: String, required: false },
         externalUrl: { type: String, required: false },
-
+        tags: [{ type: String }],
+        category: { type: String, default: "Genel" },
     },
     { timestamps: true }
 );

@@ -107,8 +107,21 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                         <Clock size={14} />
                         <span>{readingTime} dk okuma</span>
                     </div>
+                    {post.category && (
+                        <div className={styles.categoryBadge}>
+                            {post.category}
+                        </div>
+                    )}
                 </div>
                 <h1 className={styles.title}>{post.title}</h1>
+                
+                {post.tags && post.tags.length > 0 && (
+                    <div className={styles.tagRow}>
+                        {post.tags.map(tag => (
+                            <span key={tag} className={styles.tag}>#{tag}</span>
+                        ))}
+                    </div>
+                )}
                 {post.summary && <p className={styles.summary}>{post.summary}</p>}
 
                 {post.externalUrl && (

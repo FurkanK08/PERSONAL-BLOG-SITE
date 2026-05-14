@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     try {
         // Rate Limiting (IP tabanlı)
         const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
-        const limitCheck = rateLimit.check(ip);
+        const limitCheck = await rateLimit.check(ip);
 
         if (!limitCheck || !limitCheck.success) {
             return NextResponse.json({ error: "Çok fazla istek yapıldı. Lütfen daha sonra tekrar deneyin." }, { status: 429 });

@@ -1,6 +1,6 @@
 .page {
     max-width: 860px;
-    color: #e2e8f0;
+    color: var(--text-primary);
 }
 
 .header {
@@ -10,18 +10,18 @@
 .heading {
     font-size: 1.6rem;
     font-weight: 700;
-    color: #f1f5f9;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .sub {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.875rem;
 }
 
 .loading {
     padding: 3rem;
-    color: #475569;
+    color: var(--text-muted);
     text-align: center;
 }
 
@@ -36,19 +36,19 @@
     flex-direction: column;
     gap: 1.25rem;
     padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
 }
 
 .sectionTitle {
     font-size: 0.875rem;
     font-weight: 700;
-    color: #06b6d4;
+    color: var(--accent-teal);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* ─── AVATAR ─── */
@@ -71,7 +71,7 @@
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid rgba(6, 182, 212, 0.3);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--surface-hover);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +89,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.25rem;
-    color: #475569;
+    color: var(--text-muted);
     font-size: 0.72rem;
     text-align: center;
     padding: 0.5rem;
@@ -101,7 +101,7 @@
 
 .dropZone {
     flex: 1;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border: 2px dashed var(--border-color);
     border-radius: 0.75rem;
     padding: 2rem 1.5rem;
     display: flex;
@@ -111,18 +111,18 @@
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.2s;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--surface-hover);
     min-height: 140px;
     text-align: center;
 }
 
 .dropZone:hover {
-    border-color: rgba(6, 182, 212, 0.4);
+    border-color: var(--accent-teal);
     background: rgba(6, 182, 212, 0.03);
 }
 
 .dropZoneActive {
-    border-color: #06b6d4;
+    border-color: var(--accent-teal);
     background: rgba(6, 182, 212, 0.06);
 }
 
@@ -136,14 +136,14 @@
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    color: #06b6d4;
+    color: var(--accent-teal);
 }
 
 .spinner {
     width: 30px;
     height: 30px;
     border: 3px solid rgba(6, 182, 212, 0.2);
-    border-top-color: #06b6d4;
+    border-top-color: var(--accent-teal);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
@@ -159,18 +159,18 @@
 }
 
 .dropText {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
 .dropLink {
-    color: #06b6d4;
+    color: var(--accent-teal);
     font-weight: 600;
     text-decoration: underline;
 }
 
 .dropHint {
-    color: #334155;
+    color: var(--text-muted);
     font-size: 0.75rem;
 }
 
@@ -196,49 +196,49 @@
 .label {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
 .input {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--surface-hover);
+    border: 1px solid var(--border-color);
     border-radius: 0.65rem;
     padding: 0.8rem 1rem;
-    color: #e2e8f0;
+    color: var(--text-primary);
     font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
     width: 100%;
 }
 
 .input:focus {
-    border-color: #06b6d4;
+    border-color: var(--accent-teal);
     box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
 .input::placeholder {
-    color: #334155;
+    color: var(--text-muted);
 }
 
 .textarea {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--surface-hover);
+    border: 1px solid var(--border-color);
     border-radius: 0.65rem;
     padding: 1rem;
-    color: #e2e8f0;
+    color: var(--text-primary);
     font-size: 0.875rem;
     outline: none;
     resize: vertical;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
     width: 100%;
     font-family: inherit;
     line-height: 1.7;
 }
 
 .textarea:focus {
-    border-color: #06b6d4;
+    border-color: var(--accent-teal);
     box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
 }
 
@@ -285,4 +285,4 @@
 .submitBtn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-}
+}

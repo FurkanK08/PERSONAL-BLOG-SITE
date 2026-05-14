@@ -1,0 +1,71 @@
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+[data-theme="light"] .skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.05) 25%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.05) 75%
+    );
+    background-size: 200% 100%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.image {
+    width: 100%;
+    height: 200px;
+    border-radius: var(--radius-md);
+}
+
+.meta {
+    width: 40%;
+    height: 1rem;
+}
+
+.title {
+    width: 80%;
+    height: 1.5rem;
+}
+
+.summary {
+    width: 100%;
+    height: 3rem;
+}
+
+.tags {
+    width: 60%;
+    height: 1rem;
+}
+
+.readMore {
+    width: 30%;
+    height: 1rem;
+}

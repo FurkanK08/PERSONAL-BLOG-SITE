@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./Navbar.module.css";
 
 const navLinks = [
@@ -75,30 +75,14 @@ export default function Navbar() {
                             </li>
                         );
                     })}
-                    {mounted && (
-                        <li className={styles.navItem} style={{ display: 'flex', alignItems: 'center', marginLeft: '0.2rem' }}>
-                            <button
-                                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                className={styles.themeToggle}
-                                aria-label="Temayı Değiştir"
-                            >
-                                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                            </button>
-                        </li>
-                    )}
+                    <li className={styles.navItem} style={{ display: 'flex', alignItems: 'center', marginLeft: '0.2rem' }}>
+                        <ThemeToggle className={styles.themeToggle} />
+                    </li>
                 </ul>
 
                 {/* --- MOBİL BUTONLAR --- */}
                 <div className={styles.mobileActions}>
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className={`${styles.themeToggle} ${styles.mobileThemeToggle}`}
-                            aria-label="Temayı Değiştir"
-                        >
-                            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                        </button>
-                    )}
+                    <ThemeToggle className={`${styles.themeToggle} ${styles.mobileThemeToggle}`} />
                     <button
                         className={styles.hamburgerBtn}
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

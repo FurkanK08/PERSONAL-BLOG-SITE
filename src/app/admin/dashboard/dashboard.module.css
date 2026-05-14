@@ -1,6 +1,6 @@
 .page {
     max-width: 960px;
-    color: #e2e8f0;
+    color: var(--text-primary);
 }
 
 .header {
@@ -15,12 +15,12 @@
 .heading {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #f1f5f9;
+    color: var(--text-primary);
     margin: 0 0 0.25rem;
 }
 
 .sub {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -70,8 +70,8 @@
     align-items: center;
     gap: 1rem;
     padding: 1.25rem 1.5rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
 }
 
@@ -82,13 +82,13 @@
 .statNum {
     font-size: 2rem;
     font-weight: 700;
-    color: #06b6d4;
+    color: var(--accent-teal);
     margin: 0;
 }
 
 .statLabel {
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--text-muted);
     margin: 0;
 }
 
@@ -96,11 +96,11 @@
     display: flex;
     gap: 0.25rem;
     margin-bottom: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--surface-color);
     padding: 0.35rem;
     border-radius: 0.75rem;
     width: fit-content;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-color);
 }
 
 .tab {
@@ -108,7 +108,7 @@
     border-radius: 0.5rem;
     border: none;
     background: transparent;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
@@ -117,13 +117,13 @@
 
 .activeTab {
     background: rgba(6, 182, 212, 0.15);
-    color: #06b6d4;
+    color: var(--accent-teal);
 }
 
 .loading {
     text-align: center;
     padding: 3rem;
-    color: #475569;
+    color: var(--text-muted);
 }
 
 .table {
@@ -137,8 +137,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.25rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     transition: border-color 0.2s;
     flex-wrap: wrap;
@@ -146,18 +146,18 @@
 }
 
 .row:hover {
-    border-color: rgba(6, 182, 212, 0.2);
+    border-color: var(--accent-teal);
 }
 
 .rowTitle {
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--text-primary);
     margin: 0 0 0.25rem;
 }
 
 .rowMeta {
     font-size: 0.8rem;
-    color: #475569;
+    color: var(--text-muted);
     font-family: monospace;
     margin: 0;
 }
@@ -173,7 +173,7 @@
     font-size: 0.8rem;
     font-weight: 600;
     background: rgba(6, 182, 212, 0.1);
-    color: #06b6d4;
+    color: var(--accent-teal);
     border: 1px solid rgba(6, 182, 212, 0.2);
     text-decoration: none;
     transition: background 0.15s;
@@ -202,7 +202,7 @@
 .empty {
     text-align: center;
     padding: 3rem;
-    color: #475569;
+    color: var(--text-muted);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -244,6 +244,6 @@
         justify-content: flex-end;
         margin-top: 0.5rem;
         padding-top: 0.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 1px solid var(--border-color);
     }
-}
+}

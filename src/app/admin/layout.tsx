@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import styles from "./layout.module.css";
+import ThemeToggle from "@/components/ThemeToggle";
 
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -97,6 +98,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                     </Link>
                 </nav>
                 <div className={styles.sidebarBottom}>
+                    <ThemeToggle className={styles.themeToggle} />
                     <Link href="/" className={styles.navItem}>
                         🏠 Siteye Dön
                     </Link>
