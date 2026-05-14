@@ -102,6 +102,10 @@
     height: 0;
 }
 
+.editorContent :global(.ProseMirror p) {
+    margin-bottom: 1rem;
+}
+
 .editorContent :global(.ProseMirror h1) { font-size: 2rem; margin-bottom: 1rem; }
 .editorContent :global(.ProseMirror h2) { font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 1rem; }
 .editorContent :global(.ProseMirror h3) { font-size: 1.25rem; margin-top: 1.2rem; margin-bottom: 0.8rem; }
