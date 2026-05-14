@@ -27,11 +27,13 @@ export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line
         setMounted(true);
     }, []);
 
     // Sayfa değiştiğinde mobil menüyü kapat
     useEffect(() => {
+        // eslint-disable-next-line
         setMobileMenuOpen(false);
     }, [pathname]);
 

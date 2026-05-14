@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./lightbox.module.css";
 import Image from "next/image";
 
@@ -25,6 +25,14 @@ export default function Lightbox({ images, initialIndex = 0, isOpen, onClose }: 
         }
     }, [isOpen, initialIndex]);
 
+    const handleNext = useCallback(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, [images.length]);
+
+    const handlePrev = useCallback(() => {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    }, [images.length]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (!isOpen) return;
@@ -34,15 +42,7 @@ export default function Lightbox({ images, initialIndex = 0, isOpen, onClose }: 
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, currentIndex]);
-
-    const handleNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-    };
-
-    const handlePrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-    };
+    }, [isOpen, handleNext, handlePrev, onClose]);
 
     if (!isOpen) return null;
 

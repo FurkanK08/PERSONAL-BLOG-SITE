@@ -146,7 +146,6 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                         {post.content.trim().startsWith('<') ? (
                             <div dangerouslySetInnerHTML={{ __html: post.content }} />
                         ) : (
-                            /* @ts-expect-error next-mdx-remote types */
                             <MDXRemote source={post.content} />
                         )}
                     </div>
