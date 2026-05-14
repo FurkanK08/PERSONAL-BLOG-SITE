@@ -76,8 +76,8 @@
 }
 
 .toolbarSelect option {
-    background: var(--surface-bg);
-    color: var(--text-primary);
+    background-color: Canvas;
+    color: CanvasText;
 }
 
 .editorContent {
