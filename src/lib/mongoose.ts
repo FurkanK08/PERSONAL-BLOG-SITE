@@ -1,12 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-    throw new Error(
-        "Lütfen .env.local dosyasına MONGODB_URI ortam değişkenini ekleyin."
-    );
-}
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 declare global {
      
@@ -20,6 +14,12 @@ if (!cached) {
 }
 
 async function connectDB(): Promise<mongoose.Connection> {
+    if (!MONGODB_URI) {
+        throw new Error(
+            "Lütfen .env.local dosyasına MONGODB_URI ortam değişkenini ekleyin."
+        );
+    }
+
     // cached'in tanımlı olduğundan eminiz (yukarıdaki if sayesinde)
     const activeCache = cached!;
 
