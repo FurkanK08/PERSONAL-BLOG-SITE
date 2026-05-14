@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./dashboard.module.css";
+import AnalyticsCharts from "./AnalyticsCharts";
 
 interface Post { _id: string; title: string; slug: string; date: string; }
 interface Project { _id: string; title: string; slug: string; date: string; }
@@ -114,6 +115,9 @@ export default function AdminDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Analitik Grafikleri */}
+            <AnalyticsCharts />
 
             {/* Sekmeler */}
             <div className={styles.tabs}>

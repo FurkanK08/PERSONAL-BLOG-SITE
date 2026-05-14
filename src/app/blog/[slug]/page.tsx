@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import Comments from "./Comments";
 import { Post } from "@/types";
 import JsonLd from "@/components/JsonLd";
+import ContentWrapper from "./ContentWrapper";
 
 export const revalidate = 3600;
 
@@ -70,83 +71,85 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     return (
         <>
             <JsonLd data={articleSchema} />
-            <article className={`container ${styles.articleContainer}`}>
-            <Link href="/blog" className={styles.backLink}>
-                <ArrowLeft size={16} /> Blog&apos;a Dön
-            </Link>
+            <ContentWrapper>
+                <article className={`container ${styles.articleContainer}`}>
+                    <Link href="/blog" className={styles.backLink}>
+                        <ArrowLeft size={16} /> Blog&apos;a Dön
+                    </Link>
 
-            {post.imageUrl && (
-                <div className={styles.heroImageWrapper} style={{ position: 'relative', width: '100%', height: '400px', marginBottom: '2rem', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
-                    <Image
-                        src={post.imageUrl}
-                        alt={post.title}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        priority
-                        quality={85}
-                        placeholder="blur"
-                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                </div>
-            )}
-
-            <header className={styles.header}>
-                <div className={styles.meta}>
-                    <div className={styles.metaItem}>
-                        <Calendar size={14} />
-                        <time dateTime={(post.date as unknown as Date)?.toString()}>
-                            {new Date(post.date).toLocaleDateString("tr-TR", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                            })}
-                        </time>
-                    </div>
-                    <div className={styles.metaItem}>
-                        <Clock size={14} />
-                        <span>{readingTime} dk okuma</span>
-                    </div>
-                    {post.category && (
-                        <div className={styles.categoryBadge}>
-                            {post.category}
+                    {post.imageUrl && (
+                        <div className={styles.heroImageWrapper} style={{ position: 'relative', width: '100%', height: '400px', marginBottom: '2rem', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
+                            <Image
+                                src={post.imageUrl}
+                                alt={post.title}
+                                fill
+                                style={{ objectFit: 'cover' }}
+                                priority
+                                quality={85}
+                                placeholder="blur"
+                                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
                         </div>
                     )}
-                </div>
-                <h1 className={styles.title}>{post.title}</h1>
-                
-                {post.tags && post.tags.length > 0 && (
-                    <div className={styles.tagRow}>
-                        {post.tags.map(tag => (
-                            <span key={tag} className={styles.tag}>#{tag}</span>
-                        ))}
+
+                    <header className={styles.header}>
+                        <div className={styles.meta}>
+                            <div className={styles.metaItem}>
+                                <Calendar size={14} />
+                                <time dateTime={(post.date as unknown as Date)?.toString()}>
+                                    {new Date(post.date).toLocaleDateString("tr-TR", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </time>
+                            </div>
+                            <div className={styles.metaItem}>
+                                <Clock size={14} />
+                                <span>{readingTime} dk okuma</span>
+                            </div>
+                            {post.category && (
+                                <div className={styles.categoryBadge}>
+                                    {post.category}
+                                </div>
+                            )}
+                        </div>
+                        <h1 className={styles.title}>{post.title}</h1>
+                        
+                        {post.tags && post.tags.length > 0 && (
+                            <div className={styles.tagRow}>
+                                {post.tags.map(tag => (
+                                    <span key={tag} className={styles.tag}>#{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                        {post.summary && <p className={styles.summary}>{post.summary}</p>}
+
+                        {post.externalUrl && (
+                            <div style={{ marginTop: '1.5rem' }}>
+                                <a
+                                    href={post.externalUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.projectLinkBtnSec}
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                                >
+                                    Bu yazıyı orijinal kaynağında oku ↗
+                                </a>
+                            </div>
+                        )}
+                    </header>
+
+
+                    <div className={styles.mdxContent}>
+                        {/* @ts-ignore */}
+                        <MDXRemote source={post.content} />
                     </div>
-                )}
-                {post.summary && <p className={styles.summary}>{post.summary}</p>}
 
-                {post.externalUrl && (
-                    <div style={{ marginTop: '1.5rem' }}>
-                        <a
-                            href={post.externalUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.projectLinkBtnSec}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-                        >
-                            Bu yazıyı orijinal kaynağında oku ↗
-                        </a>
-                    </div>
-                )}
-            </header>
-
-
-            <div className={styles.mdxContent}>
-                {/* @ts-ignore */}
-                <MDXRemote source={post.content} />
-            </div>
-
-            <Comments postSlug={post.slug} />
-        </article>
+                    <Comments postSlug={post.slug} />
+                </article>
+            </ContentWrapper>
         </>
     );
 }

@@ -62,7 +62,7 @@ export default function ContactPage() {
                         transition={{ duration: 0.5, delay: 0.15 }}
                     >
                         {success ? (
-                            <div className={styles.successCard}>
+                            <div className={styles.successCard} role="status" aria-live="polite">
                                 <CheckCircle size={48} className={styles.successIcon} />
                                 <h2>Mesajın İletildi! 🎉</h2>
                                 <p>En kısa sürede geri döneceğim. Teşekkürler!</p>
@@ -73,28 +73,31 @@ export default function ContactPage() {
                         ) : (
                             <form onSubmit={handleSubmit} className={styles.form}>
                                 <div className={styles.field}>
-                                    <label className={styles.label}>Adın</label>
+                                    <label className={styles.label} htmlFor="name">Adın</label>
                                     <input
+                                        id="name"
                                         name="name" value={form.name} onChange={handleChange}
                                         className={styles.input} placeholder="Adın Soyadın" required
                                     />
                                 </div>
                                 <div className={styles.field}>
-                                    <label className={styles.label}>E-Posta Adresin</label>
+                                    <label className={styles.label} htmlFor="email">E-Posta Adresin</label>
                                     <input
+                                        id="email"
                                         name="email" type="email" value={form.email} onChange={handleChange}
                                         className={styles.input} placeholder="ornek@email.com" required
                                     />
                                 </div>
                                 <div className={styles.field}>
-                                    <label className={styles.label}>Mesajın</label>
+                                    <label className={styles.label} htmlFor="message">Mesajın</label>
                                     <textarea
+                                        id="message"
                                         name="message" value={form.message} onChange={handleChange}
                                         className={styles.textarea} rows={6}
                                         placeholder="Proje detaylarını, fikirlerini veya sorularını yaz..." required
                                     />
                                 </div>
-                                {error && <p className={styles.error}>{error}</p>}
+                                {error && <p className={styles.error} role="alert" aria-live="assertive">{error}</p>}
                                 <motion.button
                                     type="submit" disabled={loading} className={styles.submitBtn}
                                     whileHover={{ scale: 1.02 }}

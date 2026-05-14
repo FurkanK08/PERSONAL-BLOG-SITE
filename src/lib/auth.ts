@@ -69,3 +69,8 @@ export async function getSession(): Promise<Session | null> {
     if (!session) return null;
     return await decrypt(session);
 }
+
+export async function verifyAuth() {
+    const session = await getSession();
+    return !!session;
+}

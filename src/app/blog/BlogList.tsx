@@ -10,6 +10,8 @@ import { Post } from "@/types";
 export default function BlogList({ posts }: { posts: Post[] }) {
     const [query, setQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("Hepsi");
+    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+    const [sortBy, setSortBy] = useState<"newest" | "oldest">("newest");
 
     const categories = useMemo(() => {
         const standardCats = ["Genel", "Yazılım", "Teknoloji", "Tasarım", "Kişisel"];
@@ -18,18 +20,32 @@ export default function BlogList({ posts }: { posts: Post[] }) {
         return ["Hepsi", ...allCats];
     }, [posts]);
 
+    const allTags = useMemo(() => {
+        const tags = new Set<string>();
+        posts.forEach(p => p.tags?.forEach(t => tags.add(t)));
+        return Array.from(tags).sort();
+    }, [posts]);
+
     const filtered = useMemo(() => {
-        return posts.filter((p) => {
+        let result = posts.filter((p) => {
             const matchesQuery = !query.trim() || 
                 p.title.toLowerCase().includes(query.toLowerCase()) ||
                 p.summary.toLowerCase().includes(query.toLowerCase()) ||
                 (p.tags && p.tags.some(t => t.toLowerCase().includes(query.toLowerCase())));
             
             const matchesCategory = selectedCategory === "Hepsi" || (p.category || "Genel") === selectedCategory;
+            const matchesTag = !selectedTag || (p.tags && p.tags.includes(selectedTag));
             
-            return matchesQuery && matchesCategory;
+            return matchesQuery && matchesCategory && matchesTag;
         });
-    }, [posts, query, selectedCategory]);
+
+        // Sorting
+        return [...result].sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return sortBy === "newest" ? dateB - dateA : dateA - dateB;
+        });
+    }, [posts, query, selectedCategory, selectedTag, sortBy]);
 
     if (posts.length === 0) {
         return (
@@ -63,6 +79,17 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                     )}
                 </div>
 
+                <div className={styles.sortOptions}>
+                    <select 
+                        value={sortBy} 
+                        onChange={(e) => setSortBy(e.target.value as "newest" | "oldest")}
+                        className={styles.sortSelect}
+                    >
+                        <option value="newest">En Yeni</option>
+                        <option value="oldest">En Eski</option>
+                    </select>
+                </div>
+
                 {/* Kategoriler */}
                 <div className={styles.categories}>
                     {categories.map((cat) => (
@@ -75,15 +102,39 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                         </button>
                     ))}
                 </div>
+
+                {/* Etiket Bulutu */}
+                {allTags.length > 0 && (
+                    <div className={styles.tagCloud}>
+                        <TagIcon size={14} className={styles.tagIcon} />
+                        {allTags.map(tag => (
+                            <button
+                                key={tag}
+                                className={`${styles.tagBtn} ${selectedTag === tag ? styles.activeTag : ""}`}
+                                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                            >
+                                #{tag}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Sonuç bilgisi */}
-            {(query || selectedCategory !== "Hepsi") && (
-                <p className={styles.searchResult}>
-                    {filtered.length} sonuç bulundu 
-                    {query && <span> "{query}" için</span>}
-                    {selectedCategory !== "Hepsi" && <span> <b>{selectedCategory}</b> kategorisinde</span>}
-                </p>
+            {(query || selectedCategory !== "Hepsi" || selectedTag) && (
+                <div className={styles.activeFilters}>
+                    <p className={styles.searchResult}>
+                        {filtered.length} sonuç bulundu 
+                        {query && <span> "{query}" için</span>}
+                        {selectedCategory !== "Hepsi" && <span> <b>{selectedCategory}</b> kategorisinde</span>}
+                        {selectedTag && <span> <b>#{selectedTag}</b> etiketiyle</span>}
+                    </p>
+                    <button className={styles.resetAll} onClick={() => {
+                        setQuery("");
+                        setSelectedCategory("Hepsi");
+                        setSelectedTag(null);
+                    }}>Tümünü Temizle</button>
+                </div>
             )}
 
             <div className={styles.grid}>
@@ -133,7 +184,15 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                                         {post.tags && post.tags.length > 0 && (
                                             <div className={styles.cardTags}>
                                                 {post.tags.slice(0, 3).map(tag => (
-                                                    <span key={tag} className={styles.cardTag}>
+                                                    <span 
+                                                        key={tag} 
+                                                        className={`${styles.cardTag} ${selectedTag === tag ? styles.selectedCardTag : ""}`}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            setSelectedTag(selectedTag === tag ? null : tag);
+                                                        }}
+                                                    >
                                                         #{tag}
                                                     </span>
                                                 ))}

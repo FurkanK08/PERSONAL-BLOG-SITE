@@ -45,7 +45,12 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true
-  }
+  },
+  manifest: "/manifest.json",
+};
+
+export const viewport = {
+  themeColor: "#06b6d4",
 };
 
 export default async function RootLayout({
