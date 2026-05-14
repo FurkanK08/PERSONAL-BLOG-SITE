@@ -29,7 +29,7 @@ export const rateLimit = {
     check: async function (ip: string) {
         // Redis/Upstash varsa kullan
         if (upstashRatelimit) {
-            const { success, limit, reset, remaining } = await upstashRatelimit.limit(ip);
+            const { success, reset, remaining } = await upstashRatelimit.limit(ip);
             return { success, remaining, resetTime: reset };
         }
 
