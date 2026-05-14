@@ -124,8 +124,11 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                     </header>
 
                     <div className={styles.mdxContent}>
-                        {/* @ts-ignore */}
-                        <MDXRemote source={project.content} />
+                        {project.content.trim().startsWith('<') ? (
+                            <div dangerouslySetInnerHTML={{ __html: project.content }} />
+                        ) : (
+                            <MDXRemote source={project.content} />
+                        )}
                     </div>
                 </article>
             </ContentWrapper>

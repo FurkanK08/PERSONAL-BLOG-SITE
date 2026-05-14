@@ -15,26 +15,29 @@ export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const file = formData.get("file") as File;
+        const folder = (formData.get("folder") as string) || "portfolio/blog";
+        const type = (formData.get("type") as string) || "content";
 
         if (!file) {
             return NextResponse.json({ error: "Dosya bulunamadı" }, { status: 400 });
         }
 
-        // Dosyayı Buffer'a çevir
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // Cloudinary'ye base64 olarak yükle
+        const transformations = type === 'avatar' 
+            ? [{ width: 400, height: 400, crop: "fill", gravity: "face" }]
+            : [];
+        // @ts-ignore
+        transformations.push({ quality: "auto", fetch_format: "auto" });
+
         const result = await new Promise<{ secure_url: string; public_id: string }>(
             (resolve, reject) => {
                 cloudinary.uploader
                     .upload_stream(
                         {
-                            folder: "portfolio/avatar",
-                            transformation: [
-                                { width: 400, height: 400, crop: "fill", gravity: "face" },
-                                { quality: "auto", fetch_format: "auto" },
-                            ],
+                            folder,
+                            transformation: transformations,
                         },
                         (error, result) => {
                             if (error || !result) return reject(error);

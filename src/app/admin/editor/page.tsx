@@ -2,8 +2,11 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import styles from "./editor.module.css";
 import ImageGallery from "@/components/admin/ImageGallery";
+import RichTextEditor from "@/components/admin/RichTextEditor";
+import EditorPreview from "@/components/admin/EditorPreview";
 
 function EditorContent() {
     const router = useRouter();
@@ -17,6 +20,7 @@ function EditorContent() {
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const [galleryOpen, setGalleryOpen] = useState(false);
+    const [view, setView] = useState<"edit" | "preview" | "split">("edit");
 
     const [form, setForm] = useState({
         title: "",
@@ -76,6 +80,10 @@ function EditorContent() {
                 .trim().replace(/\s+/g, "-");
             setForm((prev) => ({ ...prev, slug }));
         }
+    }
+
+    function handleContentChange(markdown: string) {
+        setForm((prev) => ({ ...prev, content: markdown }));
     }
 
     async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -214,7 +222,9 @@ function EditorContent() {
                             </div>
                         </div>
                         {form.imageUrl && (
-                            <img src={form.imageUrl} alt="Önizleme" className={styles.preview} />
+                            <div style={{ position: 'relative', width: '100%', height: '200px', marginTop: '1rem' }}>
+                                <Image src={form.imageUrl} alt="Önizleme" fill style={{ objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }} unoptimized />
+                            </div>
                         )}
                     </div>
 
@@ -246,9 +256,31 @@ function EditorContent() {
                     )}
 
                     <div className={styles.field}>
-                        <label className={styles.label}>İçerik (MDX / Markdown) *</label>
-                        <textarea name="content" value={form.content} onChange={handleChange} className={styles.textarea} placeholder="## Başlık&#10;&#10;Buraya **markdown** veya **MDX** içerik girin..." rows={18} required />
+                        <label className={styles.label}>İçerik (Zengin Metin Editörü) *</label>
+                        
+                        <div className={styles.tabs}>
+                            <button type="button" onClick={() => setView("edit")} className={`${styles.tab} ${view === "edit" ? styles.tabActive : ""}`}>Düzenle</button>
+                            <button type="button" onClick={() => setView("preview")} className={`${styles.tab} ${view === "preview" ? styles.tabActive : ""}`}>Önizle</button>
+                            <button type="button" onClick={() => setView("split")} className={`${styles.tab} ${view === "split" ? styles.tabActive : ""}`}>Bölünmüş Görünüm</button>
+                        </div>
+
+                        <div className={view === "split" ? styles.splitView : ""}>
+                            <div style={{ display: view === "edit" || view === "split" ? "block" : "none" }}>
+                                <RichTextEditor 
+                                    content={form.content} 
+                                    onChange={handleContentChange} 
+                                    placeholder="## Başlık..."
+                                />
+                            </div>
+
+                            <div style={{ display: view === "preview" || view === "split" ? "block" : "none" }}>
+                                <div className={styles.editorWrapper} style={{ minHeight: '400px', height: '100%', margin: 0 }}>
+                                    <EditorPreview content={form.content} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
 
                     {error && <div className={styles.error}>{error}</div>}
                     {success && <div className={styles.successMsg}>{success}</div>}

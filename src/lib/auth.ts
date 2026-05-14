@@ -70,7 +70,7 @@ export async function getSession(): Promise<Session | null> {
     return await decrypt(session);
 }
 
-export async function verifyAuth() {
+export const verifyAuth = async () => {
     const session = await getSession();
     return !!session;
-}
+};

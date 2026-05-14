@@ -1,0 +1,167 @@
+.editorWrapper {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    transition: all 0.2s ease;
+}
+
+.editorWrapper:focus-within {
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+}
+
+.toolbar {
+    padding: 8px;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.toolbarGroup {
+    display: flex;
+    gap: 2px;
+    padding-right: 4px;
+    border-right: 1px solid var(--border-color);
+    margin-right: 2px;
+}
+
+.toolbarGroup:last-child {
+    border-right: none;
+}
+
+.toolbarBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toolbarBtn:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.toolbarBtnActive {
+    background: var(--accent-teal) !important;
+    color: white !important;
+}
+
+.editorContent {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* Tiptap styles */
+.editorContent :global(.ProseMirror) {
+    outline: none;
+    min-height: 300px;
+}
+
+.editorContent :global(.ProseMirror p.is-editor-empty:first-child::before) {
+    content: attr(data-placeholder);
+    float: left;
+    color: var(--text-muted);
+    pointer-events: none;
+    height: 0;
+}
+
+.editorContent :global(.ProseMirror h1) { font-size: 2rem; margin-bottom: 1rem; }
+.editorContent :global(.ProseMirror h2) { font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 1rem; }
+.editorContent :global(.ProseMirror h3) { font-size: 1.25rem; margin-top: 1.2rem; margin-bottom: 0.8rem; }
+
+.editorContent :global(.ProseMirror ul), 
+.editorContent :global(.ProseMirror ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.editorContent :global(.ProseMirror blockquote) {
+    border-left: 4px solid var(--accent-teal);
+    padding-left: 1rem;
+    margin-left: 0;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.editorContent :global(.ProseMirror pre) {
+    background: var(--surface-hover);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.editorContent :global(.ProseMirror code) {
+    background: var(--surface-hover);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.editorContent :global(.ProseMirror img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 1rem auto;
+}
+
+.editorContent :global(.ProseMirror hr) {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+}
+
+.editorContent :global(.ProseMirror table) {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.editorContent :global(.ProseMirror td), 
+.editorContent :global(.ProseMirror th) {
+    min-width: 1em;
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    vertical-align: top;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.editorContent :global(.ProseMirror th) {
+    font-weight: bold;
+    text-align: left;
+    background-color: var(--surface-hover);
+}
+
+.editorContent :global(.ProseMirror .selectedCell:after) {
+    z-index: 2;
+    position: absolute;
+    content: "";
+    left: 0; right: 0; top: 0; bottom: 0;
+    background: rgba(var(--primary-rgb), 0.1);
+    pointer-events: none;
+}

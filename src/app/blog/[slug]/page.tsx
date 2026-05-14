@@ -70,7 +70,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
     return (
         <>
-            <JsonLd data={articleSchema} />
+            <JsonLd data={articleSchema as any} />
             <ContentWrapper>
                 <article className={`container ${styles.articleContainer}`}>
                     <Link href="/blog" className={styles.backLink}>
@@ -143,8 +143,12 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
 
                     <div className={styles.mdxContent}>
-                        {/* @ts-ignore */}
-                        <MDXRemote source={post.content} />
+                        {post.content.trim().startsWith('<') ? (
+                            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                        ) : (
+                            /* @ts-expect-error next-mdx-remote types */
+                            <MDXRemote source={post.content} />
+                        )}
                     </div>
 
                     <Comments postSlug={post.slug} />

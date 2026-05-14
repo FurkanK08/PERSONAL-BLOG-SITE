@@ -1,5 +1,6 @@
 .page {
-    max-width: 860px;
+    max-width: 1200px;
+    margin: 0 auto;
     color: var(--text-primary);
 }
 
@@ -209,4 +210,47 @@
     object-fit: cover;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
+}
+
+/* Tabs & Split View */
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    background: var(--surface-hover);
+}
+
+.tabActive {
+    background: var(--accent-teal) !important;
+    color: white !important;
+    border-color: var(--accent-teal) !important;
+}
+
+.splitView {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+    .splitView {
+        grid-template-columns: 1fr;
+    }
 }
