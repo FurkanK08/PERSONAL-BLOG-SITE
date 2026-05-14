@@ -79,13 +79,14 @@ export default async function ProjectPost({ params }: { params: Promise<{ slug: 
                             <Image
                                 src={project.imageUrl}
                                 alt={project.title}
-                                fill
-                                style={{ objectFit: 'cover' }}
+                                width={1200}
+                                height={675}
+                                style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain' }}
                                 priority
-                                quality={85}
+                                quality={100}
                                 placeholder="blur"
                                 blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
                             />
                         </div>
                     )}

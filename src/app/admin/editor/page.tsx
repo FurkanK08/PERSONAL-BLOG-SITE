@@ -222,8 +222,15 @@ function EditorContent() {
                             </div>
                         </div>
                         {form.imageUrl && (
-                            <div style={{ position: 'relative', width: '100%', height: '200px', marginTop: '1rem' }}>
-                                <Image src={form.imageUrl} alt="Önizleme" fill style={{ objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }} unoptimized />
+                            <div style={{ position: 'relative', width: '100%', marginTop: '1rem', display: 'flex', justifyContent: 'center', background: 'var(--surface-bg)', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                <Image 
+                                    src={form.imageUrl} 
+                                    alt="Önizleme" 
+                                    width={800} 
+                                    height={450} 
+                                    style={{ width: '100%', height: 'auto', maxHeight: '400px', objectFit: 'contain' }} 
+                                    unoptimized 
+                                />
                             </div>
                         )}
                     </div>

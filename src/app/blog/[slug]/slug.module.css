@@ -235,7 +235,11 @@
 .projectHeroImageWrapper {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--surface-bg);
     margin-bottom: 2rem;
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -317,7 +321,7 @@
 
 @media (max-width: 768px) {
     .projectHeroImageWrapper {
-        height: 250px;
+        height: auto;
     }
 
     .projectHeaderRow {
