@@ -27,7 +27,7 @@ export default function BlogList({ posts }: { posts: Post[] }) {
     }, [posts]);
 
     const filtered = useMemo(() => {
-        let result = posts.filter((p) => {
+        const result = posts.filter((p) => {
             const matchesQuery = !query.trim() || 
                 p.title.toLowerCase().includes(query.toLowerCase()) ||
                 p.summary.toLowerCase().includes(query.toLowerCase()) ||

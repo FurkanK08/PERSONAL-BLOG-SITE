@@ -27,7 +27,7 @@ export async function decrypt(input: string): Promise<Session | null> {
             algorithms: ["HS256"],
         });
         return payload as Session;
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 }
